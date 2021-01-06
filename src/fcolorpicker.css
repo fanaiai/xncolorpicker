@@ -1,0 +1,163 @@
+.fcolorpicker-curbox{
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+.fcolorpicker{
+    width: 264px;
+    background: #f3f3f3;
+    border:1px solid #ccc;
+    position: fixed;
+    top: 100px;
+    padding: 10px;
+    box-sizing: border-box;
+    z-index: 999999;
+    /*display: none;*/
+}
+.fcolorpicker .fcolor-list{
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #ddd;
+    margin-left: 2px;
+    padding: 8px 0;
+}
+.fcolorpicker .color-item{
+    flex:0 0 39px;
+    cursor: pointer;
+    width:39px;
+    height:18px;
+    background:rgba(239,83,79,1);
+    border-radius:2px 0px 0px 0px;
+    margin-bottom: 1px;
+    margin-right:1px;
+    /*border:1px solid #E0E0E0;*/
+}
+.fcolorpicker .color-latest .color-item{
+    width:26px;
+    height:18px;
+    background:rgba(255,255,255,1);
+    border-radius:2px;
+    /*border:1px solid rgba(224,224,224,1);*/
+    flex:0 0 26px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+.fcolorpicker .color-btns{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+    align-items: center;
+}
+.fcolorpicker .color-palette{
+    display: flex;
+    height: 131px;
+    /*padding: 8px;*/
+}
+.fcolorpicker .color-palette .lightness{
+    flex:auto;
+    margin-right: 8px;
+    border:1px solid #ccc;
+    position: relative;
+    overflow: hidden;
+}
+.fcolorpicker .color-palette .lightness canvas{
+    width:100%;
+    height: 100%;
+    cursor: pointer;
+}
+.fcolorpicker .color-palette .hue{
+    flex:0 0 6px;
+    margin-right: 8px;
+    /*border:1px solid #ccc;*/
+    position: relative;
+}
+.fcolorpicker .color-palette .hue canvas,.color-palette .opacity canvas{
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+}
+.fcolorpicker .color-palette .opacity{
+    flex:0 0 6px;
+    /*border:1px solid #ccc;*/
+    position: relative;
+}
+.fcolorpicker .color-palette .opacity canvas{
+    background:url(opacity.png);
+    -webkit-background-size: contain;
+    background-size: contain;
+}
+.fcolorpicker .color-palette .lightbar{
+    position: absolute;
+    border-radius: 50%;
+    left: -4px;
+    box-shadow: 0 0px 2px rgba(204,204,192,1);
+    pointer-events: none;
+    margin-top: -7px;
+    width: 14px;
+    height: 14px;
+    background: none;
+    border: 4px solid #e0e0e0;
+    box-sizing: border-box;
+}
+.fcolorpicker .color-palette .huebar,.color-palette .opacitybar{
+    position: absolute;
+    border-radius: 50%;
+    left: -4px;
+    box-shadow: 0 0px 2px rgba(204,204,192,1);
+    pointer-events: none;
+    margin-top: -7px;
+    width: 14px;
+    height: 14px;
+    background: none;
+    border: 4px solid #e0e0e0;
+    box-sizing: border-box;
+}
+.fcolorpicker .current-color{
+    border-radius: 2px;
+    flex: 0 0 10px;
+    height: 10px;
+}
+.current-color-value{
+    border: 1px solid #ccc;
+    line-height: 24px;
+    margin: 0 4px;
+    flex:auto;
+    padding: 0 6px;
+    font-size: 12px;
+    border-radius: 4px;
+    color: #666;
+    background: #fff;
+
+}
+.current-color-value input{
+    width: 100%;
+    border: 0;
+    outline: none;
+    color: #666;
+}
+.fcolorpicker .color-btn-group{
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    flex: 0 0 82px;
+}
+.fcolorpicker .color-btn-group>a{
+    display: inline-block;
+    font-size: 12px;
+    text-align: center;
+    background: red;
+    color: #fff;
+    cursor: pointer;
+    width: 40px;
+    height: 24px;
+    border-radius: 2px;
+    line-height: 24px;
+    padding: 0;
+}
+.fcolorpicker .color-btn-group .cancel-color{
+    background: #CCCCCC;
+    color: #333;
+}
+.fcolorpicker .color-btn-group .confirm-color{
+    background: #00E592;
+}

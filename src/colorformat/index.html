@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>颜色转换</title>
+    <link rel="stylesheet" href="http://www.fxss5201.cn/project/css/normalize.css">
+    <style>
+        h1 {
+            width: 1000px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        .container {
+            width: 1000px;
+            margin: 30px auto;
+            border-collapse: collapse;
+            border-spacing: 0;
+            border: 1px solid #ddd;
+        }
+        .container th,
+        .container td {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+        }
+        .container tbody tr:even {
+            background-color: #eee;
+        }
+        .desc {
+            width: 1000px;
+            margin: 30px auto;
+        }
+    </style>
+    <script src="colorFormat.js"></script>
+</head>
+<body>
+    <h1>颜色转换</h1>
+    <div class="desc">colorFormat.js是将颜色值转换为你需要格式的JavaScript库，现在仅支持浏览器支持的HEX/RGB/RGBA/HSL/HSLA等5种格式，任意格式之间互相转换。</div>
+    <div class="desc">可能颜色互转的时候有些微差距，这是由于js在小数计算时不够精确或者对数据进行了四舍五入导致的结果，不过转换的结果与在浏览器开发者工具中转换的结果保持一致。</div>
+    <table class="container">
+        <thead>
+            <tr>
+                <th>待转换值</th>
+                <th>hex</th>
+                <th>rgb</th>
+                <th>rgba</th>
+                <th>hsl</th>
+                <th>hsla</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="6">red</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><script>document.write(colorFormat({color: "red", format: "hex"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "red", format: "rgb"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "red", format: "rgba"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "red", format: "hsl"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "red", format: "hsla"}).complete)</script></td>
+            </tr>
+            <tr>
+                <td colspan="6">#ffffff</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><script>document.write(colorFormat({color: "#ffffff", format: "hex"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "#ffffff", format: "rgb"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "#ffffff", format: "rgba"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "#ffffff", format: "hsl"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "#ffffff", format: "hsla"}).complete)</script></td>
+            </tr>
+            <tr>
+                <td colspan="6">#0080ff</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><script>document.write(colorFormat({color: "#0080ff", format: "hex"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "#0080ff", format: "rgb"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "#0080ff", format: "rgba"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "#0080ff", format: "hsl"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "#0080ff", format: "hsla"}).complete)</script></td>
+            </tr>
+            <tr>
+                <td colspan="6">#0080ff80</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><script>document.write(colorFormat({color: "#0080ff80", format: "hex"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "#0080ff80", format: "rgb"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "#0080ff80", format: "rgba"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "#0080ff80", format: "hsl"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "#0080ff80", format: "hsla"}).complete)</script></td>
+            </tr>
+            <tr>
+                <td colspan="6">rgb(0,128,255)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><script>document.write(colorFormat({color: "rgb(0,128,255)", format: "hex"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "rgb(0,128,255)", format: "rgb"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "rgb(0,128,255)", format: "rgba"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "rgb(0,128,255)", format: "hsl"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "rgb(0,128,255)", format: "hsla"}).complete)</script></td>
+            </tr>
+            <tr>
+                <td colspan="6">rgba(0,128,255,0.5)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><script>document.write(colorFormat({color: "rgba(0,128,255,0.5)", format: "hex"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "rgba(0,128,255,0.5)", format: "rgb"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "rgba(0,128,255,0.5)", format: "rgba"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "rgba(0,128,255,0.5)", format: "hsl"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "rgba(0,128,255,0.5)", format: "hsla"}).complete)</script></td>
+            </tr>
+            <tr>
+                <td colspan="6">hsl(210,100%,50%)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><script>document.write(colorFormat({color: "hsl(210,100%,50%)", format: "hex"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "hsl(210,100%,50%)", format: "rgb"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "hsl(210,100%,50%)", format: "rgba"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "hsl(210,100%,50%)", format: "hsl"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "hsl(210,100%,50%)", format: "hsla"}).complete)</script></td>
+            </tr>
+            <tr>
+                <td colspan="6">hsla(210,100%,50%,0.5)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><script>document.write(colorFormat({color: "hsla(210,100%,50%,0.5)", format: "hex"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "hsla(210,100%,50%,0.5)", format: "rgb"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "hsla(210,100%,50%,0.5)", format: "rgba"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "hsla(210,100%,50%,0.5)", format: "hsl"}).complete)</script></td>
+                <td><script>document.write(colorFormat({color: "hsla(210,100%,50%,0.5)", format: "hsla"}).complete)</script></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
