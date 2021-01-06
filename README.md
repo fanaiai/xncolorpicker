@@ -19,7 +19,7 @@
     
 ## 初始化选择器
     var fcolorpicker = new FColorPicker({
-            color: "red", 
+            color: "#ff0000", 
             selector: "#colorpicker",
             onError: function (e) {
     
@@ -58,3 +58,6 @@
                 console.log("confirm",color)
             }//选择确认
         }
+
+## 方法
++ 销毁实例 fcolorpicker.destroy()
