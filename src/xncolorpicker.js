@@ -79,32 +79,22 @@ dynamicLoadCss(csslist);
             this.curcolordom.classList.add("fcolorpicker-curbox");
             this.curcolordom.style.background = this.option.color;
             this.$el.empty().append(this.curcolordom);
-            // console.log("初始化")
-            // console.log(this.curcolordom)
-            // this.$el[0].addEventListener("click",function(){
-            //
-            // })
+            that.init();
             this.curcolordom.onclick = function (e) {
-                // console.log(e.target,that)
-                if (that.dom) {
-                    $(that.dom).remove();
-                    that.dom = null;
-                } else {
-                    that.init();
-                    that.setPosition()
-
-                }
-                // if($(that.dom).css("display")=="none"){
-                //     $(that.dom).fadeIn();
-                // }
-                // else{
-                //     $(that.dom).fadeOut();
-                // }
+                that.changeShow();
             }
             if (this.option.show) {
-                this.init();
+                $(that.dom).show();
             }
-            // that.setPosition()
+        },
+        changeShow(){
+            if ($(this.dom).css('display')=='block') {
+                $(this.dom).hide();
+            } else {
+                $(this.dom).css({"opacity":0,"display":"block"})
+                this.setPosition()
+                $(this.dom).animate({"opacity":1},200)
+            }
         },
         init: function () {
             this.initDom();
@@ -121,6 +111,7 @@ dynamicLoadCss(csslist);
             this.getHistoryColors();
             this.setPosition();
             this.addPosEvent();
+            $(this.dom).hide();
         },
         initDom: function () {
             // var dom = document.createElement("div");
@@ -327,9 +318,7 @@ dynamicLoadCss(csslist);
                     that.fillOpacity();
                     that.fillPalette();
                     that.option.onCancel(that.color[that.option.format]);
-                    $(that.dom).fadeOut();
-                    $(that.dom).remove();
-                    that.dom = null;
+                    that.changeShow();
                     return;
                 }
                 if ($t.hasClass("confirm-color")) {
@@ -340,24 +329,24 @@ dynamicLoadCss(csslist);
                     that.addHistoryColors();
                     that.option.onConfirm(that.color[that.option.format]);
                     that.option.color = that.color[that.option.format];
-                    $(that.dom).fadeOut();
-                    $(that.dom).remove();
-                    that.dom = null;
+                    that.changeShow();
                     return;
                 }
             })
-            document.addEventListener("mousedown", function (e) {
-                e.stopPropagation();
-                if (that.dom && e.target != that.dom && $(e.target).parents(".fcolorpicker")[0] != that.dom && $(e.target)[0] != that.curcolordom) {
-                    that.getColorFormat(that.option.color);
-                    that.fillOpacity();
-                    that.fillPalette();
-                    that.option.onCancel(that.color[that.option.format]);
-                    $(that.dom).fadeOut();
-                    $(that.dom).remove();
-                    that.dom = null;
-                }
-            })
+            document.addEventListener("mousedown", this.mousedownFunc.bind(this))
+        },
+        mousedownFunc(e){
+            var that=this;
+            e.stopPropagation();
+            if (that.dom && e.target != that.dom && $(e.target).parents(".fcolorpicker")[0] != that.dom && $(e.target)[0] != that.curcolordom) {
+                that.getColorFormat(that.option.color);
+                that.fillOpacity();
+                that.fillPalette();
+                that.option.onCancel(that.color[that.option.format]);
+                $(that.dom).fadeOut();
+                $(that.dom).remove();
+                that.dom = null;
+            }
         },
         changeColor: function (t, e, startpos) {
             if (!t) {
@@ -549,7 +538,11 @@ dynamicLoadCss(csslist);
             }
 
             document.body.removeChild(textArea);
-        }
+        },
+        destroy:function(){
+            $(this.dom).remove();
+            document.removeEventListener("mousedown", this.mousedownFunc.bind(this))
+        },
     }
     window.XNColorPicker = XNColorPicker;
 })(window)

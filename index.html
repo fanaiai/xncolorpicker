@@ -20,6 +20,7 @@
 <div id="colorpicker">
 
 </div>
+<a id="destroy">销毁</a>
 </body>
 <script src="src/xncolorpicker.js"></script>
 <script>
@@ -47,6 +48,6 @@
             console.log("confirm",color)
         }
     })
-
+    document.querySelector("#destroy").onclick=function(){xncolorpicker.destroy();}
 </script>
 </html>
