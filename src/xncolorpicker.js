@@ -1,9 +1,10 @@
-//! FColorPicker.js
-//! https://github.com/fanaiai/fcolorpicker
+//! XNColorPicker.js
+//！ 仙女颜色选择器
+//! https://github.com/fanaiai/xncolorpicker
 //! version : 1.0.0
 //! authors : 范媛媛
 //! create date:2019/05/14
-//! update date:2019/12/06
+//! update date:2021/01/06
 function dynamicLoadJs(urllist) {
     for (let i = 0; i < urllist.length; i++) {
 
@@ -32,7 +33,7 @@ var s = document.currentScript.src;
 var csspath = s.substr(0, s.lastIndexOf('/') - 0);
 var jslist = [csspath + "/jquery.min.js", csspath + "/lib/colorformat/colorFormat.js"]
 dynamicLoadJs(jslist);
-var csslist = [csspath + "/fcolorpicker.css"]
+var csslist = [csspath + "/xncolorpicker.css"]
 dynamicLoadCss(csslist);
 (function (window) {
     // var that;
@@ -56,7 +57,7 @@ dynamicLoadCss(csslist);
         lang: 'cn',// cn 、en
     }
 
-    function FColorPicker(options) {
+    function XNColorPicker(options) {
         // that = this;
         this.btns = {
             "cn": ["取消", "确定"],
@@ -71,7 +72,7 @@ dynamicLoadCss(csslist);
         this.initCurrentColorBox();
     }
 
-    FColorPicker.prototype = {
+    XNColorPicker.prototype = {
         initCurrentColorBox: function () {
             var that = this;
             this.curcolordom = document.createElement("div");
@@ -550,5 +551,5 @@ dynamicLoadCss(csslist);
             document.body.removeChild(textArea);
         }
     }
-    window.FColorPicker = FColorPicker;
+    window.XNColorPicker = XNColorPicker;
 })(window)
