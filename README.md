@@ -5,7 +5,11 @@
 + 支持历史颜色
 
 # 选择器样式
-![avatar](https://raw.githubusercontent.com/fanaiai/xndatepicker/main/img/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_16098368986650.png)
+![avatar](https://raw.githubusercontent.com/fanaiai/xncolorpicker/main/1.png)
+
+![avatar](https://raw.githubusercontent.com/fanaiai/xncolorpicker/main/2.png)
+
+![avatar](https://raw.githubusercontent.com/fanaiai/xncolorpicker/main/3.png)
 
 # 使用步骤
 ## 下载代码
