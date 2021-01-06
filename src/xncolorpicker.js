@@ -333,21 +333,24 @@ dynamicLoadCss(csslist);
                     return;
                 }
             })
-            document.addEventListener("mousedown", this.mousedownFunc.bind(this))
-        },
-        mousedownFunc(e){
-            var that=this;
-            e.stopPropagation();
-            if (that.dom && e.target != that.dom && $(e.target).parents(".fcolorpicker")[0] != that.dom && $(e.target)[0] != that.curcolordom) {
-                that.getColorFormat(that.option.color);
-                that.fillOpacity();
-                that.fillPalette();
-                that.option.onCancel(that.color[that.option.format]);
-                $(that.dom).fadeOut();
-                $(that.dom).remove();
-                that.dom = null;
+            var mousedownFunc=(e)=>{
+                e.stopPropagation();
+                if (that.dom && e.target != that.dom && $(e.target).parents(".fcolorpicker")[0] != that.dom && $(e.target)[0] != that.curcolordom) {
+                    that.getColorFormat(that.option.color);
+                    that.fillOpacity();
+                    that.fillPalette();
+                    that.option.onCancel(that.color[that.option.format]);
+                    $(that.dom).fadeOut();
+                    $(that.dom).remove();
+                    that.dom = null;
+                }
             }
+            this.removeMouseDownEvent=()=>{
+                document.removeEventListener("mousedown", mousedownFunc)
+            }
+            document.addEventListener("mousedown", mousedownFunc)
         },
+
         changeColor: function (t, e, startpos) {
             if (!t) {
                 return;
@@ -541,7 +544,7 @@ dynamicLoadCss(csslist);
         },
         destroy:function(){
             $(this.dom).remove();
-            document.removeEventListener("mousedown", this.mousedownFunc.bind(this))
+            this.removeMouseDownEvent();
         },
     }
     window.XNColorPicker = XNColorPicker;
