@@ -1,3 +1,5 @@
+'use strict';
+
 //! XNColorPicker.js
 //！ 仙女颜色选择器
 //! https://github.com/fanaiai/xncolorpicker
@@ -6,20 +8,20 @@
 //! create date:2019/05/14
 //! update date:2021/01/06
 function dynamicLoadJs(urllist) {
-    for (let i = 0; i < urllist.length; i++) {
+    for (var i = 0; i < urllist.length; i++) {
 
-        let url = urllist[i];
+        var url = urllist[i];
         var head = document.getElementsByTagName('head')[0];
         var link = document.createElement('script');
         link.src = url;
-        var finelurl = '<script type="text/javascript" src=' + url + '><\/script>'
-        document.write(finelurl)
+        var finelurl = '<script type="text/javascript" src=' + url + '><\/script>';
+        document.write(finelurl);
     }
 }
 
 function dynamicLoadCss(urllist) {
-    for (let i = 0; i < urllist.length; i++) {
-        let url = urllist[i];
+    for (var i = 0; i < urllist.length; i++) {
+        var url = urllist[i];
         var head = document.getElementsByTagName('head')[0];
         var link = document.createElement('link');
         link.type = 'text/css';
@@ -28,54 +30,45 @@ function dynamicLoadCss(urllist) {
         head.appendChild(link);
     }
 }
-var scripts = document.getElementsByTagName("script")
+var scripts = document.getElementsByTagName("script");
 var script = scripts[scripts.length - 1];
-var s = document.querySelector ? script.src : script.getAttribute("src", 4)//IE8直接.src
+var s = document.querySelector ? script.src : script.getAttribute("src", 4); //IE8直接.src
 // var s =currentlyAddingScript?currentlyAddingScript: document.currentScript.src;
 var csspath = s.substr(0, s.lastIndexOf('/') - 0);
-var jslist = [csspath + "/jquery.min.js", csspath + "/lib/colorformat/colorFormat.js"]
+var jslist = [csspath + "/jquery.min.js", csspath + "/lib/colorformat/colorFormat.js"];
 dynamicLoadJs(jslist);
-var csslist = [csspath + "/xncolorpicker.css"]
+var csslist = [csspath + "/xncolorpicker.css"];
 dynamicLoadCss(csslist);
 (function (window) {
     // var that;
     var option = {
-        showprecolor: true,//显示预制颜色
-        prevcolors: [
-            '#EF534F', '#BA69C8', '#FFD54F', '#81C784', '#7FDEEA', '#90CAF9',
-            '#F44436', '#AB47BC', '#FFC106', '#66BB6A', '#25C6DA', '#4EC3F7',
-            '#E53934', '#9D27B0', '#FFA726', '#4CAF50', '#00ACC1', '#29B6F6',
-            '#D32E30', '#8F24AA', '#FB8C01', '#378E3C', '#0097A7', '#02AAF4',
-            '#C62928', '#7B1FA2', '#F57C02', '#2F7D31', '#00838F', '#029BE5',
-            '#B71B1C', '#6A1B9A', '#EF6C00', '#34691D', '#006164', '#0388D1',
-            '#980A0B', '#4A148C', '#E65100', '#1A5E20', '#004D41', '#01579B',
-            'rgba(0,0,0,0)', '#FFFFFF', '#DBDBDB', '#979797', '#606060', '#000000',
-        ],//预制颜色
-        showhistorycolor: true,//显示历史
-        historycolornum: 16,//历史条数
-        format: 'hsla',//rgba hex hsla
-        showPalette: true,//显示色盘
+        showprecolor: true, //显示预制颜色
+        prevcolors: ['#EF534F', '#BA69C8', '#FFD54F', '#81C784', '#7FDEEA', '#90CAF9', '#F44436', '#AB47BC', '#FFC106', '#66BB6A', '#25C6DA', '#4EC3F7', '#E53934', '#9D27B0', '#FFA726', '#4CAF50', '#00ACC1', '#29B6F6', '#D32E30', '#8F24AA', '#FB8C01', '#378E3C', '#0097A7', '#02AAF4', '#C62928', '#7B1FA2', '#F57C02', '#2F7D31', '#00838F', '#029BE5', '#B71B1C', '#6A1B9A', '#EF6C00', '#34691D', '#006164', '#0388D1', '#980A0B', '#4A148C', '#E65100', '#1A5E20', '#004D41', '#01579B', 'rgba(0,0,0,0)', '#FFFFFF', '#DBDBDB', '#979797', '#606060', '#000000'], //预制颜色
+        showhistorycolor: true, //显示历史
+        historycolornum: 16, //历史条数
+        format: 'hsla', //rgba hex hsla
+        showPalette: true, //显示色盘
         show: true, //初始化显示
-        lang: 'cn',// cn 、en
-    }
+        lang: 'cn' // cn 、en
+    };
 
     function XNColorPicker(options) {
         // that = this;
         this.btns = {
             "cn": ["取消", "确定"],
-            "en": ["Cancel", "OK"],
-        }
+            "en": ["Cancel", "OK"]
+        };
         this.option = $.extend(true, {}, option, options);
         if (typeof this.option.selector == 'string') {
             this.$el = $(this.option.selector);
         } else {
-            this.$el = $(this.option.selector)
+            this.$el = $(this.option.selector);
         }
         this.initCurrentColorBox();
     }
 
     XNColorPicker.prototype = {
-        initCurrentColorBox: function () {
+        initCurrentColorBox: function initCurrentColorBox() {
             var that = this;
             this.curcolordom = document.createElement("div");
             this.curcolordom.classList.add("fcolorpicker-curbox");
@@ -84,21 +77,22 @@ dynamicLoadCss(csslist);
             that.init();
             this.curcolordom.onclick = function (e) {
                 that.changeShow();
-            }
+            };
             if (this.option.show) {
                 $(that.dom).show();
             }
         },
-        changeShow(){
-            if ($(this.dom).css('display')=='block') {
+        changeShow: function changeShow() {
+            if ($(this.dom).css('display') == 'block') {
                 $(this.dom).hide();
             } else {
-                $(this.dom).css({"opacity":0,"display":"block"})
-                this.setPosition()
-                $(this.dom).animate({"opacity":1},200)
+                $(this.dom).css({ "opacity": 0, "display": "block" });
+                this.setPosition();
+                $(this.dom).animate({ "opacity": 1 }, 200);
             }
         },
-        init: function () {
+
+        init: function init() {
             this.initDom();
             this.addEvent();
             this.getColorFormat(this.option.color || "#000");
@@ -107,7 +101,7 @@ dynamicLoadCss(csslist);
                 this.initColorBand();
                 this.initOpacity();
             } else {
-                this.dom.querySelector(".color-palette").style.display = 'none'
+                this.dom.querySelector(".color-palette").style.display = 'none';
             }
             this.setPrevColors();
             this.getHistoryColors();
@@ -115,45 +109,16 @@ dynamicLoadCss(csslist);
             this.addPosEvent();
             $(this.dom).hide();
         },
-        initDom: function () {
+        initDom: function initDom() {
             // var dom = document.createElement("div");
-            var html = `<div class="fcolorpicker">
-            <div class="color-palette">
-                <div class="lightness">
-                    <div class="lightbar"></div>
-                </div>
-                <div class="hue">
-                    <div class="huebar"></div>
-                </div>
-                <div class="opacity">
-                    <div class="opacitybar"></div>
-                </div>
-            </div>
-            <!--            <p>最近使用</p>-->
-            <div class="color-latest fcolor-list">
-            </div>
-<!--            <p>预置颜色</p>-->
-            <div class="color-recommend fcolor-list">
-            </div>
-
-            <div class="color-btns">
-                <div class="current-color"></div>
-                <div class="current-color-value">
-                    <input type="text">
-                </div>
-                <div class="color-btn-group">
-                    <a class="cancel-color">${this.btns[this.option.lang][0]}</a>
-                    <a class="confirm-color">${this.btns[this.option.lang][1]}</a>
-                </div>
-            </div>
-        </div>`
+            var html = '<div class="fcolorpicker">\n            <div class="color-palette">\n                <div class="lightness">\n                    <div class="lightbar"></div>\n                </div>\n                <div class="hue">\n                    <div class="huebar"></div>\n                </div>\n                <div class="opacity">\n                    <div class="opacitybar"></div>\n                </div>\n            </div>\n            <!--            <p>\u6700\u8FD1\u4F7F\u7528</p>-->\n            <div class="color-latest fcolor-list">\n            </div>\n<!--            <p>\u9884\u7F6E\u989C\u8272</p>-->\n            <div class="color-recommend fcolor-list">\n            </div>\n\n            <div class="color-btns">\n                <div class="current-color"></div>\n                <div class="current-color-value">\n                    <input type="text">\n                </div>\n                <div class="color-btn-group">\n                    <a class="cancel-color">' + this.btns[this.option.lang][0] + '</a>\n                    <a class="confirm-color">' + this.btns[this.option.lang][1] + '</a>\n                </div>\n            </div>\n        </div>';
             // $(dom).append(html);
             this.dom = $(html)[0];
             document.body.appendChild(this.dom);
             this.canvasSize = {
                 width: $(this.dom.querySelector(".lightness")).width(),
-                height: $(this.dom.querySelector(".lightness")).height(),
-            }
+                height: $(this.dom.querySelector(".lightness")).height()
+            };
             this.lightbar = this.dom.querySelector(".lightbar");
             this.huebar = this.dom.querySelector(".huebar");
             this.opacitybar = this.dom.querySelector(".opacitybar");
@@ -169,25 +134,25 @@ dynamicLoadCss(csslist);
             if (!this.option.showhistorycolor) {
                 $(this.dom).find(".color-latest").hide();
             }
-            this.setPosition()
+            this.setPosition();
         },
-        addPosEvent: function () {
+        addPosEvent: function addPosEvent() {
             var that = this;
             window.addEventListener("scroll", function () {
                 that.setPosition();
-            })
+            });
             window.addEventListener("resize", function () {
                 that.setPosition();
-            })
+            });
         },
-        setPosition: function () {
+        setPosition: function setPosition() {
             // console.log(this.curcolordom.getBoundingClientRect(),document.documentElement.clientWidth,document.documentElement.clientHeight)
             if (!this.dom) {
                 return;
             }
             var wwidth = document.documentElement.clientWidth;
             var wheight = document.documentElement.clientHeight;
-            var curcolordom = this.$el[0].querySelector("div")
+            var curcolordom = this.$el[0].querySelector("div");
             var top = curcolordom.getBoundingClientRect().top;
             var left = curcolordom.getBoundingClientRect().left;
             // console.log(this.curcolordom,top)
@@ -201,18 +166,18 @@ dynamicLoadCss(csslist);
             if (wheight - top < domheight) {
                 top = top - domheight - curcolordom.offsetHeight;
             } else {
-                top = top
+                top = top;
             }
             if (top < 10) {
-                top = 10
+                top = 10;
             }
             this.dom.style.top = top + "px";
             this.dom.style.left = left + "px";
         },
 
-        addHistoryColors: function () {
-            for (let i = 0; i < this.hiscolors.length; i++) {
-                if (colorFormat({color: this.hiscolors[i], format: "rgba"}).complete == this.color.rgba) {
+        addHistoryColors: function addHistoryColors() {
+            for (var i = 0; i < this.hiscolors.length; i++) {
+                if (colorFormat({ color: this.hiscolors[i], format: "rgba" }).complete == this.color.rgba) {
                     this.hiscolors.splice(i, 1);
                     break;
                 }
@@ -223,38 +188,34 @@ dynamicLoadCss(csslist);
             this.rendHisColors();
             this.setPosition();
         },
-        getHistoryColors: function () {
+        getHistoryColors: function getHistoryColors() {
             // var hiscolors=window.localStorage.clear("fcolorpicker");
             var hiscolors = window.localStorage.getItem("fcolorpicker");
             this.hiscolors = (hiscolors || "").split(";");
             this.rendHisColors();
         },
-        rendHisColors: function () {
+        rendHisColors: function rendHisColors() {
             if (!this.option.showhistorycolor) {
                 return;
             }
             $(this.dom).find(".color-latest").empty();
-            for (let i = 0; i < (this.option.historycolornum < 0 ? this.hiscolors.length : this.option.historycolornum); i++) {
+            for (var i = 0; i < (this.option.historycolornum < 0 ? this.hiscolors.length : this.option.historycolornum); i++) {
                 if (this.hiscolors[i] && this.hiscolors[i] != '') {
-                    let html = `
-                    <div class="color-item" style="background:${this.hiscolors[i]}" data-color="${this.hiscolors[i]}"></div>
-                `
+                    var html = '\n                    <div class="color-item" style="background:' + this.hiscolors[i] + '" data-color="' + this.hiscolors[i] + '"></div>\n                ';
                     $(this.dom).find(".color-latest").append(html);
                 }
             }
         },
-        setPrevColors: function () {
+        setPrevColors: function setPrevColors() {
             if (!this.option.showprecolor) {
                 return;
             }
-            for (let i = 0; i < this.option.prevcolors.length; i++) {
-                let html = `
-                    <div class="color-item" style="background:${this.option.prevcolors[i]}" data-color="${this.option.prevcolors[i]}"></div>
-                `
+            for (var i = 0; i < this.option.prevcolors.length; i++) {
+                var html = '\n                    <div class="color-item" style="background:' + this.option.prevcolors[i] + '" data-color="' + this.option.prevcolors[i] + '"></div>\n                ';
                 $(this.dom).find(".color-recommend").append(html);
             }
         },
-        addEvent: function () {
+        addEvent: function addEvent() {
             var t = null;
             var that = this;
             this.dom.querySelector(".current-color-value input").addEventListener("blur", function (e) {
@@ -263,12 +224,12 @@ dynamicLoadCss(csslist);
                 that.fillPalette();
                 that.addHistoryColors();
                 return;
-            }, false)
+            }, false);
             var startpos = {
                 top: 0,
                 left: 0,
                 bartop: 0
-            }
+            };
             that.dom.addEventListener("mousedown", function (e) {
                 var $t = $(e.target);
 
@@ -281,11 +242,10 @@ dynamicLoadCss(csslist);
                     var changeY = e.offsetY * 100 / that.canvasSize.height;
                     that.huebar.style.top = changeY.toFixed(2) + '%';
                     startpos.bartop = parseFloat(that.huebar.style.top);
-
                 }
                 if ($t.parents(".opacity").length > 0) {
                     t = 'opacity';
-                    var changeY = (e.offsetY * 100 / that.canvasSize.height);
+                    var changeY = e.offsetY * 100 / that.canvasSize.height;
                     that.opacitybar.style.top = changeY.toFixed(2) + '%';
                     startpos.bartop = parseFloat(that.opacitybar.style.top);
                 }
@@ -293,7 +253,7 @@ dynamicLoadCss(csslist);
                 startpos.y = e.clientY;
                 that.changeColor(t, e, null);
                 that.option.onChange(that.color[that.option.format]);
-            })
+            });
             this.dom.addEventListener("mousemove", function (e) {
                 // if ($(e.target).parents("." + t).length > 0) {
                 if (t) {
@@ -301,10 +261,10 @@ dynamicLoadCss(csslist);
                     that.option.onChange(that.color[that.option.format]);
                 }
                 // }
-            })
+            });
             this.dom.addEventListener("mouseup", function (e) {
                 t = null;
-            })
+            });
             this.dom.addEventListener("click", function (e) {
                 e.stopPropagation();
                 var $t = $(e.target);
@@ -334,8 +294,8 @@ dynamicLoadCss(csslist);
                     that.changeShow();
                     return;
                 }
-            })
-            var mousedownFunc=(e)=>{
+            });
+            var mousedownFunc = function mousedownFunc(e) {
                 e.stopPropagation();
                 if (that.dom && e.target != that.dom && $(e.target).parents(".fcolorpicker")[0] != that.dom && $(e.target)[0] != that.curcolordom) {
                     that.getColorFormat(that.option.color);
@@ -346,14 +306,14 @@ dynamicLoadCss(csslist);
                     $(that.dom).remove();
                     that.dom = null;
                 }
-            }
-            this.removeMouseDownEvent=()=>{
-                document.removeEventListener("mousedown", mousedownFunc)
-            }
-            document.addEventListener("mousedown", mousedownFunc)
+            };
+            this.removeMouseDownEvent = function () {
+                document.removeEventListener("mousedown", mousedownFunc);
+            };
+            document.addEventListener("mousedown", mousedownFunc);
         },
 
-        changeColor: function (t, e, startpos) {
+        changeColor: function changeColor(t, e, startpos) {
             if (!t) {
                 return;
             }
@@ -375,7 +335,7 @@ dynamicLoadCss(csslist);
             switch (t) {
                 case 'hue':
                     this.huebar.style.top = changeY + '%';
-                    color = 'hsla(' + (changeY * 360 / 100) + ',' + this.color.hslav[1] + '%,' + this.color.hslav[2] + '%,' + this.color.hslav[3] + ')';
+                    color = 'hsla(' + changeY * 360 / 100 + ',' + this.color.hslav[1] + '%,' + this.color.hslav[2] + '%,' + this.color.hslav[3] + ')';
                     break;
                 case 'lightness':
                     // console.log(x,y)
@@ -390,7 +350,7 @@ dynamicLoadCss(csslist);
                     this.lightbar.style.left = x + 'px';
                     break;
                 case 'opacity':
-                    changeY = changeY > 99.2 ? 100 : changeY
+                    changeY = changeY > 99.2 ? 100 : changeY;
                     this.opacitybar.style.top = changeY + '%';
                     color = 'rgba(' + this.color.rgbav[0] + ',' + this.color.rgbav[1] + ',' + this.color.rgbav[2] + ',' + ((100 - changeY) / 100).toFixed(2) + ')';
                     break;
@@ -400,15 +360,15 @@ dynamicLoadCss(csslist);
                 this.fillOpacity();
                 this.fillPalette();
             }
-            this.setPosition()
+            this.setPosition();
             // console.log(color)
         },
-        initColorBand: function () {
+        initColorBand: function initColorBand() {
             var canvas = document.createElement("canvas");
             this.ctxhue = canvas.getContext("2d");
             canvas.width = 10;
             canvas.height = this.canvasSize.height;
-            this.dom.querySelector(".color-palette .hue").appendChild(canvas)
+            this.dom.querySelector(".color-palette .hue").appendChild(canvas);
             this.ctxhue.rect(0, 0, 10, this.canvasSize.height);
             var grd1 = this.ctxhue.createLinearGradient(0, 0, 0, this.canvasSize.height);
             grd1.addColorStop(0, 'rgba(255, 0, 0, 1)');
@@ -421,33 +381,31 @@ dynamicLoadCss(csslist);
             this.ctxhue.fillStyle = grd1;
             this.ctxhue.fill();
         },
-        initOpacity: function () {
+        initOpacity: function initOpacity() {
             var canvas = document.createElement("canvas");
             this.ctxopacity = canvas.getContext("2d");
             canvas.width = 10;
             canvas.height = this.canvasSize.height;
-            this.dom.querySelector(".color-palette .opacity").appendChild(canvas)
+            this.dom.querySelector(".color-palette .opacity").appendChild(canvas);
             this.fillOpacity();
         },
-        fillOpacity: function () {
-            this.ctxopacity.clearRect(0, 0, 10, this.canvasSize.height)
+        fillOpacity: function fillOpacity() {
+            this.ctxopacity.clearRect(0, 0, 10, this.canvasSize.height);
             var grdWhite = this.ctxlightness.createLinearGradient(0, 0, 10, this.canvasSize.height);
             grdWhite.addColorStop(0, 'rgba(' + this.color.rgbav[0] + ',' + this.color.rgbav[1] + ',' + this.color.rgbav[2] + ',1)');
             grdWhite.addColorStop(1, 'rgba(' + this.color.rgbav[0] + ',' + this.color.rgbav[1] + ',' + this.color.rgbav[2] + ',0)');
             this.ctxopacity.fillStyle = grdWhite;
             this.ctxopacity.fillRect(0, 0, 10, this.canvasSize.height);
-
         },
-        initPalette: function () {
+        initPalette: function initPalette() {
             this.canvas = document.createElement("canvas");
             this.ctxlightness = this.canvas.getContext("2d");
             this.canvas.width = this.canvasSize.width;
             this.canvas.height = this.canvasSize.height;
-            this.dom.querySelector(".color-palette .lightness").appendChild(this.canvas)
+            this.dom.querySelector(".color-palette .lightness").appendChild(this.canvas);
             this.fillPalette();
-
         },
-        fillPalette() {
+        fillPalette: function fillPalette() {
             this.ctxlightness.fillStyle = "hsla(" + this.color.hslav[0] + ",100%,50%,1)";
             var width1 = this.canvasSize.width;
             var height1 = this.canvasSize.height;
@@ -464,24 +422,25 @@ dynamicLoadCss(csslist);
             this.ctxlightness.fillStyle = grdBlack;
             this.ctxlightness.fillRect(0, 0, width1, height1);
         },
-        setColor: function (color) {
+
+        setColor: function setColor(color) {
             this.option.color = color;
-            this.getColorFormat(color)
+            this.getColorFormat(color);
         },
-        getColor: function (color) {
+        getColor: function getColor(color) {
             return this.color;
         },
-        getColorFormat: function (color1) {
+        getColorFormat: function getColorFormat(color1) {
 
             if (color1.indexOf("rgb") < 0 && color1.indexOf("#") < 0 && color1.indexOf("hsl") < 0) {
-                color1 = 'rgba(0,0,0,0)'
+                color1 = 'rgba(0,0,0,0)';
             }
             var color = {
-                "rgba": colorFormat({color: color1, format: "rgba"}).complete,
-                "hsla": colorFormat({color: color1, format: "hsla"}).complete,
-                "hex": colorFormat({color: color1, format: "hex"}).complete,
+                "rgba": colorFormat({ color: color1, format: "rgba" }).complete,
+                "hsla": colorFormat({ color: color1, format: "hsla" }).complete,
+                "hex": colorFormat({ color: color1, format: "hex" }).complete
             };
-            if ((!color.rgba || color.rgba.indexOf("NaN") > -1)) {
+            if (!color.rgba || color.rgba.indexOf("NaN") > -1) {
                 if (this.dom) {
                     this.dom.querySelector(".current-color-value input").value = this.color[this.option.format];
                     return;
@@ -492,14 +451,14 @@ dynamicLoadCss(csslist);
             this.color = color;
             // console.log(color)
             // console.log(color1,colorFormat({color: 'hsla(133.95348837209303,0%,20%,1)', format: "hsla"}).complete)
-            this.color.rgbav = this.color.rgba.slice(5, this.color.rgba.indexOf(')')).split(",")
+            this.color.rgbav = this.color.rgba.slice(5, this.color.rgba.indexOf(')')).split(",");
             this.color.hslav = this.color.hsla.slice(5, this.color.hsla.indexOf(')')).split(",").map(function (ele) {
                 if (ele.indexOf("%") > -1) {
-                    return ele.slice(0, ele.indexOf("%"))
+                    return ele.slice(0, ele.indexOf("%"));
                 } else {
                     return ele;
                 }
-            })
+            });
             this.curcolordom.style.background = this.color.rgba;
 
             if (!this.dom) {
@@ -509,13 +468,13 @@ dynamicLoadCss(csslist);
             this.dom.querySelector(".current-color-value input").value = this.color[this.option.format];
             this.setBarPos();
         },
-        setBarPos: function () {
+        setBarPos: function setBarPos() {
             this.opacitybar.style.top = (1 - this.color.rgbav[3]) * 100 + "%";
             if (parseFloat(this.color.hslav[1]) != 0) {
-                this.huebar.style.top = (this.color.hslav[0] * 100) / 360 + "%";
+                this.huebar.style.top = this.color.hslav[0] * 100 / 360 + "%";
             }
         },
-        $copy: function (text) {
+        $copy: function $copy(text) {
             // if (text.indexOf('-') !== -1) {
             //     let arr = text.split('-');
             //     text = arr[0] + arr[1];
@@ -538,17 +497,17 @@ dynamicLoadCss(csslist);
             try {
                 var successful = document.execCommand('copy');
                 var msg = successful ? '成功复制到剪贴板' : '该浏览器不支持点击复制到剪贴板';
-                layer.msg(msg, {skin: "suclayer"});
+                layer.msg(msg, { skin: "suclayer" });
             } catch (err) {
-                layer.msg('该浏览器不支持点击复制到剪贴板', {skin: "errorlayer"});
+                layer.msg('该浏览器不支持点击复制到剪贴板', { skin: "errorlayer" });
             }
 
             document.body.removeChild(textArea);
         },
-        destroy:function(){
+        destroy: function destroy() {
             $(this.dom).remove();
             this.removeMouseDownEvent();
-        },
-    }
+        }
+    };
     window.XNColorPicker = XNColorPicker;
-})(window)
+})(window);
