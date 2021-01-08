@@ -82,8 +82,8 @@ dynamicLoadCss(csslist);
                 $(that.dom).show();
             }
         },
-        changeShow: function changeShow() {
-            if ($(this.dom).css('display') == 'block') {
+        changeShow: function changeShow(hide) {
+            if ($(this.dom).css('display') == 'block' || hide) {
                 $(this.dom).hide();
             } else {
                 $(this.dom).css({ "opacity": 0, "display": "block" });
@@ -280,7 +280,7 @@ dynamicLoadCss(csslist);
                     that.fillOpacity();
                     that.fillPalette();
                     that.option.onCancel(that.color[that.option.format]);
-                    that.changeShow();
+                    that.changeShow(true);
                     return;
                 }
                 if ($t.hasClass("confirm-color")) {
@@ -291,7 +291,7 @@ dynamicLoadCss(csslist);
                     that.addHistoryColors();
                     that.option.onConfirm(that.color[that.option.format]);
                     that.option.color = that.color[that.option.format];
-                    that.changeShow();
+                    that.changeShow(true);
                     return;
                 }
             });
@@ -302,9 +302,7 @@ dynamicLoadCss(csslist);
                     that.fillOpacity();
                     that.fillPalette();
                     that.option.onCancel(that.color[that.option.format]);
-                    $(that.dom).fadeOut();
-                    $(that.dom).remove();
-                    that.dom = null;
+                    that.changeShow(true);
                 }
             };
             this.removeMouseDownEvent = function () {
