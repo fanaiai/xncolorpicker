@@ -219,7 +219,7 @@ dynamicLoadCss(csslist);
             }
             this.hiscolors.unshift(this.color.rgba);
             window.localStorage.setItem("fcolorpicker", this.hiscolors.join(";"));
-            this.option.onChange(this.color[this.option.format]);
+            //this.option.onChange(this.color[this.option.format]);
             this.rendHisColors();
             this.setPosition();
         },
@@ -341,8 +341,9 @@ dynamicLoadCss(csslist);
                     that.getColorFormat(that.option.color);
                     that.fillOpacity();
                     that.fillPalette();
+                    if($(that.dom).css('display')=='block'){
                     that.option.onCancel(that.color[that.option.format]);
-                    that.changeShow(true);
+                    that.changeShow(true);}
                 }
             }
             this.removeMouseDownEvent=()=>{
