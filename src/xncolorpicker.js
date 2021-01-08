@@ -1,7 +1,7 @@
 //! XNColorPicker.js
 //！ 仙女颜色选择器
 //! https://github.com/fanaiai/xncolorpicker
-//! version : 1.0.0
+//! version : 1.0.1
 //! authors : 范媛媛
 //! create date:2019/05/14
 //! update date:2021/01/06
