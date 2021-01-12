@@ -61,3 +61,6 @@
 
 ## 方法
 + 销毁实例 xncolorpicker.destroy()
+
+## 待开发功能
++ 渐变色支持
