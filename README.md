@@ -18,7 +18,7 @@
     <script src="fcolorpicker.js"></script>
     
 ## 初始化选择器
-    var fcolorpicker = new FColorPicker({
+    var xncolorpicker = new XNColorPicker({
             color: "#ff0000", 
             selector: "#colorpicker",
             onError: function (e) {
