@@ -15,7 +15,7 @@
 ## 下载代码
 ## 将src目录放置您的项目中
 ## 引用js文件，例如：
-    <script src="fcolorpicker.js"></script>
+    <script src="xncolorpicker.js"></script>
     
 ## 初始化选择器
     var xncolorpicker = new XNColorPicker({
@@ -60,4 +60,4 @@
         }
 
 ## 方法
-+ 销毁实例 fcolorpicker.destroy()
++ 销毁实例 xncolorpicker.destroy()
