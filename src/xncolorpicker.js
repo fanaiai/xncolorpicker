@@ -4,7 +4,7 @@
 //! version : 1.0.1
 //! authors : 范媛媛
 //! create date:2019/05/14
-//! update date:2021/01/06
+//! update date:2021/01/06 v1.0.0发布
 function dynamicLoadJs(urllist) {
     for (let i = 0; i < urllist.length; i++) {
 
@@ -28,6 +28,7 @@ function dynamicLoadCss(urllist) {
         head.appendChild(link);
     }
 }
+
 var scripts = document.getElementsByTagName("script")
 var script = scripts[scripts.length - 1];
 var s = document.querySelector ? script.src : script.getAttribute("src", 4)//IE8直接.src
@@ -89,13 +90,13 @@ dynamicLoadCss(csslist);
                 $(that.dom).show();
             }
         },
-        changeShow(hide){
-            if ($(this.dom).css('display')=='block' || hide) {
+        changeShow(hide) {
+            if ($(this.dom).css('display') == 'block' || hide) {
                 $(this.dom).hide();
             } else {
-                $(this.dom).css({"opacity":0,"display":"block"})
+                $(this.dom).css({"opacity": 0, "display": "block"})
                 this.setPosition()
-                $(this.dom).animate({"opacity":1},200)
+                $(this.dom).animate({"opacity": 1}, 200)
             }
         },
         init: function () {
@@ -117,7 +118,12 @@ dynamicLoadCss(csslist);
         },
         initDom: function () {
             // var dom = document.createElement("div");
-            var html = `<div class="fcolorpicker">
+            var html =
+                `<div class="fcolorpicker">
+<!--            <div class="color-type">-->
+<!--               <span>纯色</span>-->
+<!--               <span>渐变色</span>-->
+<!--            </div>-->
             <div class="color-palette">
                 <div class="lightness">
                     <div class="lightbar"></div>
@@ -335,18 +341,19 @@ dynamicLoadCss(csslist);
                     return;
                 }
             })
-            var mousedownFunc=(e)=>{
+            var mousedownFunc = (e) => {
                 e.stopPropagation();
                 if (that.dom && e.target != that.dom && $(e.target).parents(".fcolorpicker")[0] != that.dom && $(e.target)[0] != that.curcolordom) {
                     that.getColorFormat(that.option.color);
                     that.fillOpacity();
                     that.fillPalette();
-                    if($(that.dom).css('display')=='block'){
-                    that.option.onCancel(that.color[that.option.format]);
-                    that.changeShow(true);}
+                    if ($(that.dom).css('display') == 'block') {
+                        that.option.onCancel(that.color[that.option.format]);
+                        that.changeShow(true);
+                    }
                 }
             }
-            this.removeMouseDownEvent=()=>{
+            this.removeMouseDownEvent = () => {
                 document.removeEventListener("mousedown", mousedownFunc)
             }
             document.addEventListener("mousedown", mousedownFunc)
@@ -544,7 +551,7 @@ dynamicLoadCss(csslist);
 
             document.body.removeChild(textArea);
         },
-        destroy:function(){
+        destroy: function () {
             $(this.dom).remove();
             this.removeMouseDownEvent();
         },
