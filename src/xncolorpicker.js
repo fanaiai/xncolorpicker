@@ -120,10 +120,10 @@ dynamicLoadCss(csslist);
             // var dom = document.createElement("div");
             var html =
                 `<div class="fcolorpicker">
-<!--            <div class="color-type">-->
-<!--               <span>纯色</span>-->
-<!--               <span>渐变色</span>-->
-<!--            </div>-->
+            <div class="color-type">
+               <span>纯色</span>
+               <span>渐变色</span>
+            </div>
             <div class="color-palette">
                 <div class="lightness">
                     <div class="lightbar"></div>
