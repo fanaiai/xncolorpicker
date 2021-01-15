@@ -5,6 +5,7 @@
 //! authors : 范媛媛
 //! create date:2019/05/14
 //! update date:2021/01/06 v1.0.0发布
+//! update date:2021/01/06 v1.1.0发布
 function dynamicLoadJs(urllist) {
     for (let i = 0; i < urllist.length; i++) {
 
@@ -36,7 +37,7 @@ var s = document.querySelector ? script.src : script.getAttribute("src", 4)//IE8
 var csspath = s.substr(0, s.lastIndexOf('/') - 0);
 var jslist = [csspath + "/jquery.min.js", csspath + "/lib/colorformat/colorFormat.js"]
 dynamicLoadJs(jslist);
-var csslist = [csspath + "/xncolorpicker.css"]
+var csslist = [csspath + "/xncolorpicker.css","//at.alicdn.com/t/font_2330183_pruflrov4th.css"]
 dynamicLoadCss(csslist);
 (function (window) {
     // var that;
@@ -122,7 +123,30 @@ dynamicLoadCss(csslist);
                 `<div class="fcolorpicker">
             <div class="color-type">
                <span>纯色</span>
-               <span>渐变色</span>
+               <span>线性渐变</span>
+               <span>径向渐变</span>
+            </div>
+            <div class="color-gradient">
+                <div class="gradient-bar-container">
+                    <div class="gradient-colors">
+                        <div class="gradient-item iconfontcolorpicker iconcolorpicker1" style="left:10%">
+                            <div class="color"></div>
+                        </div>
+                        <div class="gradient-item" style="left:20%">
+                            <div class="color"></div>
+                        </div>
+                    </div>
+                    <div class="gradient-bar">
+                    
+                    </div>
+                    <a class="add-gradient iconfontcolorpicker iconcolorpicker11"></a>
+                </div>
+                <div class="gradient-angle">
+                    <div class="current-angle">
+                      <div></div>
+                      <span>30°</span>
+</div>
+</div>
             </div>
             <div class="color-palette">
                 <div class="lightness">
