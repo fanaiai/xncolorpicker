@@ -145,7 +145,7 @@ dynamicLoadCss(csslist);
                 </div>
                 <div class="gradient-angle">
                     <div class="current-angle">
-                      <div></div>
+                      <div class="angle-bar"></div>
                       <span>30°</span>
 </div>
 </div>
@@ -241,7 +241,6 @@ dynamicLoadCss(csslist);
             this.dom.style.top = top + "px";
             this.dom.style.left = left + "px";
         },
-
         addHistoryColors: function () {
             for (let i = 0; i < this.hiscolors.length; i++) {
                 if (colorFormat({color: this.hiscolors[i], format: "rgba"}).complete == this.color.rgba) {
@@ -299,11 +298,12 @@ dynamicLoadCss(csslist);
             var startpos = {
                 top: 0,
                 left: 0,
-                bartop: 0
+                bartop: 0,
+                isGradientBar:false,
+                $ele:null
             }
-            that.dom.addEventListener("mousedown", function (e) {
+            that.dom.addEventListener("mousedown", (e)=> {
                 var $t = $(e.target);
-
                 t = null;
                 if ($t.parents(".lightness").length > 0) {
                     t = 'lightness';
@@ -325,17 +325,66 @@ dynamicLoadCss(csslist);
                 startpos.y = e.clientY;
                 that.changeColor(t, e, null);
                 that.option.onChange(that.color[that.option.format]);
+                if($t.parents(".gradient-item")[0]){
+                    $t=$t.parents('.gradient-item')
+                }
+                if($t.hasClass("gradient-item")){
+                    startpos.isGradientBar=true;
+                    this.gradientIndex=$t.index();
+                    this.updateGradientBar();
+                    this.setCurrentGradientColor();
+                    startpos.$ele=$t;
+                }
+                if($t.hasClass("add-gradient")){
+                    this.gradientColor.arry.colors.push({
+                        per:100,
+                        color:'#ffffff'
+                    })
+                    this.rendGradientColors();
+                    this.updateGradientBar();
+                }
+                if($t.hasClass("angle-bar")){
+                    startpos.isGradientBar=false;
+                    startpos.isAngleBar=true;
+                }
             })
-            this.dom.addEventListener("mousemove", function (e) {
+            document.addEventListener("mousemove", (e)=> {
                 // if ($(e.target).parents("." + t).length > 0) {
                 if (t) {
                     that.changeColor(t, e, startpos);
                     that.option.onChange(that.color[that.option.format]);
                 }
+                else if(startpos.isGradientBar){//如果移动渐变滑块
+                    var per=((e.clientX-$(this.dom).find(".gradient-colors")[0].getBoundingClientRect().left)*100/$(this.dom).find(".gradient-colors")[0].getBoundingClientRect().width).toFixed(1);
+                    this.gradientColor.arry.colors[this.gradientIndex].per=per;
+                    startpos.$ele.css({left:per+'%'})
+                    this.updateGradientBar();
+                }
+                else if(startpos.isAngleBar){
+                    var angle=((e.clientX-$(this.dom).find(".gradient-angle")[0].getBoundingClientRect().left)*360/$(this.dom).find(".gradient-angle")[0].getBoundingClientRect().width).toFixed(1);
+                    if(angle<0){
+                        angle=0
+                    }
+                    if(angle>360){
+                        angle=360
+                    }
+                    this.gradientColor.arry.angle=angle;
+                    this.updateAngleBar();
+                }
                 // }
             })
-            this.dom.addEventListener("mouseup", function (e) {
+            document.addEventListener("mouseup", (e) =>{
+                if(startpos.isGradientBar){
+                    var per=((e.clientX-$(this.dom).find(".gradient-colors")[0].getBoundingClientRect().left)*100/$(this.dom).find(".gradient-colors")[0].getBoundingClientRect().width).toFixed(1);
+                    if(per>100 || per<0){
+                        this.gradientColor.arry.colors.splice(this.gradientIndex,1);
+                        startpos.$ele.remove();
+                        this.updateGradientBar();
+                    }
+                }
                 t = null;
+                startpos.isGradientBar=false;
+                startpos.isAngleBar=false;
             })
             this.dom.addEventListener("click", function (e) {
                 e.stopPropagation();
@@ -526,11 +575,21 @@ dynamicLoadCss(csslist);
                 this.dom.querySelector(".current-color").style.background = this.gradientColor.str;
                 this.dom.querySelector(".current-color-value input").value = this.gradientColor.str;
                 this.rendGradientColors();
+                this.updateGradientBar();
                 this.setCurrentGradientColor();
             }
         },
         setCurrentGradientColor(){
             this.getColorFormat(this.gradientColor.arry.colors[this.gradientIndex].color)
+        },
+        updateAngleBar(){
+            $(this.dom).find('.current-angle span').html(this.gradientColor.arry.angle+'°')
+            $(this.dom).find('.current-angle .angle-bar').css('left',this.gradientColor.arry.angle/3.6+'%')
+        },
+        updateGradientBar(){
+            var back=this.revertGradientToString(this.gradientColor.arry,true)
+            $(this.dom).find('.gradient-bar').css("background",back.str)
+            $(this.dom).find(".gradient-item").removeClass("on").eq(this.gradientIndex).addClass("on")
         },
         rendGradientColors() {
             var list = ''
@@ -541,6 +600,7 @@ dynamicLoadCss(csslist);
                 list += html;
             }
             $(this.dom).find(".gradient-colors").empty().append(list)
+            $(this.dom).find(".gradient-item").removeClass("on").eq(this.gradientIndex).addClass("on")
         },
         changeColorType() {
             $(this.dom).find('.color-type').removeClass('on')
@@ -548,7 +608,6 @@ dynamicLoadCss(csslist);
             this.gradientIndex = 0;
         },
         getColorFormat: function (color1) {
-            console.log(color1)
             if (color1.indexOf("rgb") < 0 && color1.indexOf("#") < 0 && color1.indexOf("hsl") < 0) {
                 color1 = 'rgba(0,0,0,0)'
             }
@@ -602,6 +661,7 @@ dynamicLoadCss(csslist);
 
             }
             var obj = {
+                type:value.toLowerCase().indexOf('radial-gradient') > -1?'radial-gradient':'linear-gradient',
                 angle: arry[0],
                 colors: []
             }
@@ -619,9 +679,12 @@ dynamicLoadCss(csslist);
                 arry: obj
             }
         },
-        revertGradientToString: function (value) {
+        revertGradientToString: function (value,isbar) {
             var gradient = value.type + '(';
-            if (value.type == 'linear-gradient') {
+            if(isbar){
+                gradient += 'to right,';
+            }
+            else if (value.type == 'linear-gradient') {
                 gradient += parseFloat(value.angle).toFixed(4) + 'deg,';
             }
             for (let i = 0; i < value.colors.length; i++) {

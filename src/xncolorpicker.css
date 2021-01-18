@@ -13,6 +13,7 @@
     box-sizing: border-box;
     z-index: 999999;
     /*display: none;*/
+    user-select: none;
 }
 .fcolorpicker .fcolor-list{
     display: flex;
@@ -192,6 +193,9 @@
     margin-left: -9px;
     cursor: pointer;
 }
+.fcolorpicker .gradient-colors .gradient-item.on{
+    border:1px solid #57a4ff;
+}
 .fcolorpicker .gradient-colors .gradient-item:before{
     position: absolute;
     top: 12px;
@@ -205,15 +209,28 @@
 .fcolorpicker .gradient-bar{
     flex:auto;
     height:14px;
+
+    margin-right:6px;
+    position: relative;
+}
+.fcolorpicker .gradient-bar:after{
+    content:'';
+    display: block;
+    position: absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
     background: url(opacity.png);
     background-size: 10px;
-    margin-right:6px;
+    opacity: .2;
 }
 .fcolorpicker .add-gradient{
     flex:0 0 16px;
     height:16px;
     width:16px;
-    color: #57A4FF
+    color: #57A4FF;
+    cursor:pointer;
 }
 .fcolorpicker .gradient-angle{
     padding-top: 10px;
@@ -231,6 +248,8 @@
     background:#57A4FF;
     position: absolute;
     top: -6px;
+    margin-left:-7px;
+    cursor: pointer;
 }
 .fcolorpicker .gradient-angle .current-angle span{
     font-size: 12px;
