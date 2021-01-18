@@ -37,7 +37,7 @@ var s = document.querySelector ? script.src : script.getAttribute("src", 4)//IE8
 var csspath = s.substr(0, s.lastIndexOf('/') - 0);
 var jslist = [csspath + "/jquery.min.js", csspath + "/lib/colorformat/colorFormat.js"]
 dynamicLoadJs(jslist);
-var csslist = [csspath + "/xncolorpicker.css","//at.alicdn.com/t/font_2330183_pruflrov4th.css"]
+var csslist = [csspath + "/xncolorpicker.css", "//at.alicdn.com/t/font_2330183_pruflrov4th.css"]
 dynamicLoadCss(csslist);
 (function (window) {
     // var that;
@@ -59,6 +59,8 @@ dynamicLoadCss(csslist);
         showPalette: true,//显示色盘
         show: true, //初始化显示
         lang: 'cn',// cn 、en
+        colorType: 'single',//single,linear-gradient,radial-gradient,初始化颜色类型
+        colorTypeOption: ['single', 'linear-gradient', 'radial-gradient'],//可切换的颜色类型
     }
 
     function XNColorPicker(options) {
@@ -103,7 +105,7 @@ dynamicLoadCss(csslist);
         init: function () {
             this.initDom();
             this.addEvent();
-            this.getColorFormat(this.option.color || "#000");
+            this.initColorFormat();
             if (this.option.showPalette) {
                 this.initPalette();
                 this.initColorBand();
@@ -122,9 +124,9 @@ dynamicLoadCss(csslist);
             var html =
                 `<div class="fcolorpicker">
             <div class="color-type">
-               <span>纯色</span>
-               <span>线性渐变</span>
-               <span>径向渐变</span>
+               <span class="single">纯色</span>
+               <span class="linear-gradient">线性渐变</span>
+               <span class="radial-gradient">径向渐变</span>
             </div>
             <div class="color-gradient">
                 <div class="gradient-bar-container">
@@ -132,7 +134,7 @@ dynamicLoadCss(csslist);
                         <div class="gradient-item iconfontcolorpicker iconcolorpicker1" style="left:10%">
                             <div class="color"></div>
                         </div>
-                        <div class="gradient-item" style="left:20%">
+                        <div class="gradient-item iconfontcolorpicker iconcolorpicker1" style="left:20%">
                             <div class="color"></div>
                         </div>
                     </div>
@@ -487,7 +489,6 @@ dynamicLoadCss(csslist);
             grdWhite.addColorStop(1, 'rgba(255,255,255,0)');
             this.ctxlightness.fillStyle = grdWhite;
             this.ctxlightness.fillRect(0, 0, width1, height1);
-
             var grdBlack = this.ctxlightness.createLinearGradient(0, 0, 0, height1);
             grdBlack.addColorStop(0, 'rgba(0,0,0,0)');
             grdBlack.addColorStop(1, 'rgba(0,0,0,1)');
@@ -501,8 +502,53 @@ dynamicLoadCss(csslist);
         getColor: function (color) {
             return this.color;
         },
+        initColorFormat() {
+            if (typeof this.option.color == 'Object') {
+                this.gradientColor = this.revertGradientToString(this.option.color)
+                if (this.gradientColor.str.indexOf('linear-gradient') > -1) {
+                    this.currentColorType = 'linear-gradient';
+                } else {
+                    this.currentColorType = 'radial-gradient';
+                }
+            } else if (this.option.color.toLowerCase().indexOf('linear-gradient') > -1 || this.option.color.toLowerCase().indexOf('radial-gradient') > -1) {
+                this.gradientColor = this.revertGradientToArray(this.option.color)
+                if (this.gradientColor.str.indexOf('linear-gradient') > -1) {
+                    this.currentColorType = 'linear-gradient';
+                } else {
+                    this.currentColorType = 'radial-gradient';
+                }
+            } else {
+                this.getColorFormat(this.option.color || "#000");
+                this.currentColorType = 'single';
+            }
+            this.changeColorType()
+            if (this.currentColorType != 'single') {
+                this.dom.querySelector(".current-color").style.background = this.gradientColor.str;
+                this.dom.querySelector(".current-color-value input").value = this.gradientColor.str;
+                this.rendGradientColors();
+                this.setCurrentGradientColor();
+            }
+        },
+        setCurrentGradientColor(){
+            this.getColorFormat(this.gradientColor.arry.colors[this.gradientIndex].color)
+        },
+        rendGradientColors() {
+            var list = ''
+            for (let i = 0; i < this.gradientColor.arry.colors.length; i++) {
+                let html = `<div class="gradient-item iconfontcolorpicker iconcolorpicker1" style="left:${this.gradientColor.arry.colors[i].per}%">
+                            <div class="color" style="background:${this.gradientColor.arry.colors[i].color}"></div>
+                        </div>`
+                list += html;
+            }
+            $(this.dom).find(".gradient-colors").empty().append(list)
+        },
+        changeColorType() {
+            $(this.dom).find('.color-type').removeClass('on')
+            $(this.dom).find('.' + this.currentColorType).addClass('on')
+            this.gradientIndex = 0;
+        },
         getColorFormat: function (color1) {
-
+            console.log(color1)
             if (color1.indexOf("rgb") < 0 && color1.indexOf("#") < 0 && color1.indexOf("hsl") < 0) {
                 color1 = 'rgba(0,0,0,0)'
             }
@@ -520,8 +566,6 @@ dynamicLoadCss(csslist);
                 }
             }
             this.color = color;
-            // console.log(color)
-            // console.log(color1,colorFormat({color: 'hsla(133.95348837209303,0%,20%,1)', format: "hsla"}).complete)
             this.color.rgbav = this.color.rgba.slice(5, this.color.rgba.indexOf(')')).split(",")
             this.color.hslav = this.color.hsla.slice(5, this.color.hsla.indexOf(')')).split(",").map(function (ele) {
                 if (ele.indexOf("%") > -1) {
@@ -544,6 +588,53 @@ dynamicLoadCss(csslist);
             if (parseFloat(this.color.hslav[1]) != 0) {
                 this.huebar.style.top = (this.color.hslav[0] * 100) / 360 + "%";
             }
+        },
+        revertGradientToArray: function (value) {
+            if (value.toLowerCase().indexOf('radial-gradient') > -1) {
+                var arry = value.slice(value.toLowerCase().indexOf('linear-gradient(') + 16, value.toLowerCase().indexOf(')')).split(',').map((res) => {
+                    return res.trim()
+                })
+            }
+            if (value.toLowerCase().indexOf('linear-gradient') > -1) {
+                var arry = value.slice(value.toLowerCase().indexOf('linear-gradient(') + 16, value.toLowerCase().indexOf(')')).split(',').map((res) => {
+                    return res.trim()
+                })
+
+            }
+            var obj = {
+                angle: arry[0],
+                colors: []
+            }
+            for (let i = 1; i < arry.length; i++) {
+                let color = arry[i].split(' ')
+                obj.colors.push(
+                    {
+                        color: color[0],
+                        per: color[1] || (100 * (i - 1) / (arry.length - 2))
+                    }
+                )
+            }
+            return {
+                str: value,
+                arry: obj
+            }
+        },
+        revertGradientToString: function (value) {
+            var gradient = value.type + '(';
+            if (value.type == 'linear-gradient') {
+                gradient += parseFloat(value.angle).toFixed(4) + 'deg,';
+            }
+            for (let i = 0; i < value.colors.length; i++) {
+                gradient += value.colors[i].color + ' ' + parseFloat(value.colors[i].per).toFixed(4);
+                if (value.colors[i].per != '') {
+                    gradient += '%'
+                }
+                if (i < value.colors.length - 1) {
+                    gradient += ','
+                }
+            }
+            gradient += ')';
+            return {str: gradient, arry: value};
         },
         $copy: function (text) {
             // if (text.indexOf('-') !== -1) {

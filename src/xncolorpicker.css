@@ -4,12 +4,12 @@
     cursor: pointer;
 }
 .fcolorpicker{
-    width: 264px;
+    width: 284px;
     background: #f3f3f3;
     border:1px solid #ccc;
     position: fixed;
     top: 100px;
-    padding: 10px;
+    padding: 10px 20px;
     box-sizing: border-box;
     z-index: 999999;
     /*display: none;*/
@@ -103,13 +103,12 @@
     position: absolute;
     border-radius: 50%;
     left: -4px;
-    box-shadow: 0 0px 2px rgba(204,204,192,1);
+    box-shadow: 0 2px 7px -1px rgb(81 81 78);
     pointer-events: none;
     margin-top: -7px;
     width: 14px;
     height: 14px;
-    background: none;
-    border: 4px solid #e0e0e0;
+    background: #fff;
     box-sizing: border-box;
 }
 .fcolorpicker .current-color{
@@ -177,9 +176,9 @@
 
 .fcolorpicker .gradient-colors{
     position: absolute;
-    width:100%;
-    left:0;
-    top:6px;
+    width: calc(100% - 22px);
+    left: 0;
+    top: 6px;
 }
 .fcolorpicker .gradient-colors .gradient-item{
     width:16px;
@@ -190,6 +189,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-left: -9px;
+    cursor: pointer;
 }
 .fcolorpicker .gradient-colors .gradient-item:before{
     position: absolute;
@@ -236,4 +237,13 @@
     position: absolute;
     top: 8px;
 }
-
+.fcolorpicker .color-type{
+    font-size:14px;
+}
+.fcolorpicker .color-type span{
+    cursor: pointer;
+}
+.fcolorpicker .color-type .on{
+    color: #57a4ff;
+    font-weight: BOLD;
+}
