@@ -1,11 +1,11 @@
 .fcolorpicker-curbox{
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     cursor: pointer;
 }
 .fcolorpicker{
     width: 284px;
-    background: #f3f3f3;
+    background: #fff;
     border:1px solid #ccc;
     position: fixed;
     top: 100px;
@@ -20,7 +20,8 @@
     flex-wrap: wrap;
     border-bottom: 1px solid #ddd;
     margin-left: 2px;
-    padding: 8px 0;
+    padding: 4px 0;
+    padding-bottom: 0;
 }
 .fcolorpicker .color-item{
     flex:0 0 39px;
@@ -31,7 +32,20 @@
     border-radius:2px 0px 0px 0px;
     margin-bottom: 1px;
     margin-right:1px;
+    position: relative;
     /*border:1px solid #E0E0E0;*/
+}
+.fcolorpicker .color-item:before{
+    /*content:'';*/
+    /*display: block;*/
+    /*background:url(opacity.png);*/
+    /*-webkit-background-size: contain;*/
+    /*background-size: contain;*/
+    /*position: absolute;*/
+    /*width:100%;*/
+    /*height:100%;*/
+    /*top:0;*/
+    /*left:0;*/
 }
 .fcolorpicker .color-latest .color-item{
     width:26px;
@@ -44,10 +58,16 @@
     margin-bottom: 4px;
 }
 .fcolorpicker .color-btns{
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    padding-top: 10px;
+    /*align-items: center;*/
+}
+.fcolorpicker .color-btns .color-preview{
     display: flex;
     justify-content: space-between;
-    padding-top: 10px;
     align-items: center;
+    margin-bottom:6px;
 }
 .fcolorpicker .color-palette{
     display: flex;
@@ -59,7 +79,7 @@
     margin-right: 8px;
     border:1px solid #ccc;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 .fcolorpicker .color-palette .lightness canvas{
     width:100%;
@@ -94,6 +114,7 @@
     box-shadow: 0 0px 2px rgba(204,204,192,1);
     pointer-events: none;
     margin-top: -7px;
+    margin-left:-7px;
     width: 14px;
     height: 14px;
     background: none;
@@ -114,17 +135,19 @@
 }
 .fcolorpicker .current-color{
     border-radius: 2px;
-    flex: 0 0 10px;
-    height: 10px;
+    flex: 0 0 24px;
+    height: 24px;
+    border: 1px solid #f3f3f3;
 }
 .current-color-value{
     border: 1px solid #ccc;
     line-height: 24px;
-    margin: 0 4px;
+    height: 24px;
+    margin-left: 2px;
     flex:auto;
     padding: 0 6px;
     font-size: 12px;
-    border-radius: 4px;
+    border-radius: 2px;
     color: #666;
     background: #fff;
 
@@ -138,7 +161,7 @@
 .fcolorpicker .color-btn-group{
     align-items: center;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     flex: 0 0 82px;
 }
 .fcolorpicker .color-btn-group>a{
@@ -153,13 +176,14 @@
     border-radius: 2px;
     line-height: 24px;
     padding: 0;
+    margin-left: 6px;
 }
 .fcolorpicker .color-btn-group .cancel-color{
     background: #CCCCCC;
     color: #333;
 }
 .fcolorpicker .color-btn-group .confirm-color{
-    background: #00E592;
+    background: #57a4ff;
 }
 
 
@@ -186,15 +210,17 @@
     height:16px;
     position: absolute;
     top:0;
-    border:1px solid #928F8F;
+    border:1px solid #d9d7d7;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-left: -9px;
     cursor: pointer;
+    background: #fff;
 }
 .fcolorpicker .gradient-colors .gradient-item.on{
     border:1px solid #57a4ff;
+    /*background: #57a4ff;*/
 }
 .fcolorpicker .gradient-colors .gradient-item:before{
     position: absolute;
@@ -213,7 +239,7 @@
     margin-right:6px;
     position: relative;
 }
-.fcolorpicker .gradient-bar:after{
+.fcolorpicker .gradient-bar:before{
     content:'';
     display: block;
     position: absolute;
@@ -238,7 +264,7 @@
 .fcolorpicker .gradient-angle .current-angle{
     width:100%;
     height:4px;
-    background:#928F8F;
+    background:#d5d3d3;
     position: relative;
 }
 .fcolorpicker .gradient-angle .current-angle div{

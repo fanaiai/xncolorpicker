@@ -11,7 +11,7 @@
         #colorpicker{
             position: fixed;
             /*right: 0;*/
-            margin-top: 400px;
+            margin-top: 100px;
             border: 1px solid #fff;
         }
     </style>
@@ -25,7 +25,7 @@
 <script src="src/xncolorpicker.js"></script>
 <script>
     var xncolorpicker = new XNColorPicker({
-        color: "linear-gradient(to right,blue,green, #ff0000 , #ffff00)",
+        color: "linear-gradient(30deg,rgba(233,11,22,1), #ffff00)",
         selector: "#colorpicker",
         showprecolor: true,//显示预制颜色
         prevcolors: [],//预制颜色，有默认
@@ -42,7 +42,7 @@
             console.log("cancel",color)
         },
         onChange:function(color){
-            console.log("change",color)
+            // console.log("change",color)
         },
         onConfirm:function(color){
             console.log("confirm",color)
