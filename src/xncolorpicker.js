@@ -323,6 +323,24 @@ dynamicLoadCss(csslist);
                 // }
             }
         },
+        cancleFun(){
+            var that=this;
+            that.initColorFormat(this.lastColor, true)
+            var confirmcolor = {
+                colorType: this.currentColorType
+            };
+            if (this.currentColorType == 'single') {
+                confirmcolor.color = that.color;
+                this.lastColor = this.color.rgba;
+            } else {
+                confirmcolor.color = this.gradientColor;
+                this.lastColor = this.gradientColor.str;
+            }
+            this.changeCurColorDom()
+            that.option.onCancel(confirmcolor);
+            that.changeShow(true);
+            return;
+        },
         addEvent: function () {
             var t = null;
             var that = this;
@@ -469,31 +487,10 @@ dynamicLoadCss(csslist);
                     return;
                 }
                 if ($t.hasClass("cancel-color")) {
-                    // that.getColorFormat(that.option.color);
-                    that.initColorFormat(this.lastColor, true)
-                    // that.fillOpacity();
-                    // that.fillPalette();
-                    var confirmcolor = {
-                        colorType: this.currentColorType
-                    };
-                    if (this.currentColorType == 'single') {
-                        confirmcolor.color = that.color;
-                        this.lastColor = this.color.rgba;
-                    } else {
-                        confirmcolor.color = this.gradientColor;
-                        this.lastColor = this.gradientColor.str;
-                    }
-                    this.changeCurColorDom()
-                    that.option.onCancel(confirmcolor);
-                    that.changeShow(true);
-                    return;
+                    this.cancleFun();
                 }
                 if ($t.hasClass("confirm-color")) {
                     that.initColorFormat(that.dom.querySelector(".current-color-value input").value, true)
-                    // that.getColorFormat(that.dom.querySelector(".current-color-value input").value);
-                    // that.fillOpacity();
-                    // that.fillPalette();
-                    // that.addHistoryColors();
                     that.addHistoryColors();
                     var confirmcolor = {
                         colorType: this.currentColorType
@@ -523,8 +520,7 @@ dynamicLoadCss(csslist);
                     // that.fillOpacity();
                     // that.fillPalette();
                     if ($(that.dom).css('display') == 'block') {
-                        that.option.onCancel(that.color[that.option.format]);
-                        that.changeShow(true);
+                        that.cancleFun();
                     }
                 }
             }
