@@ -578,7 +578,6 @@ dynamicLoadCss(csslist);
                     var h=this.color.hslav[0];
                     var s=x/this.canvasSize.width*100;
                     var b=100-y/this.canvasSize.height*100;
-                    console.log(x,y,s,b)
                     var rgb = this.HSBToRGB({h:h, s:s, b:b});
                     color='rgba('+rgb.r+','+rgb.g+','+rgb.b+','+this.color.rgbav[3]+')';
                     this.lightbar.style.top = y + 'px';
