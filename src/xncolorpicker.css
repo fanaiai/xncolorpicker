@@ -75,9 +75,10 @@
     /*padding: 8px;*/
 }
 .fcolorpicker .color-palette .lightness{
-    flex:auto;
+    flex:0 0 212px;
+    height: 129px;
     margin-right: 8px;
-    border:1px solid #ccc;
+    /*border:1px solid #ccc;*/
     position: relative;
     overflow: visible;
 }
