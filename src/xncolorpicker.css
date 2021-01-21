@@ -4,16 +4,22 @@
     cursor: pointer;
 }
 .fcolorpicker{
-    width: 284px;
+    width: 264px;
     background: #fff;
     border:1px solid #ccc;
     position: fixed;
     top: 100px;
-    padding: 10px 20px;
+    padding: 6px 10px;
     box-sizing: border-box;
     z-index: 999999;
     /*display: none;*/
     user-select: none;
+}
+.fcolorpicker.canmove{
+    cursor: move;
+}
+.fcolorpicker>*{
+    cursor: auto;
 }
 .fcolorpicker .fcolor-list{
     display: flex;
@@ -33,19 +39,27 @@
     margin-bottom: 1px;
     margin-right:1px;
     position: relative;
+    /*background-image: url(opacity.png);*/
     /*border:1px solid #E0E0E0;*/
 }
+.fcolorpicker .color-item span{
+    position: absolute;
+    display: block;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+}
 .fcolorpicker .color-item:before{
-    /*content:'';*/
-    /*display: block;*/
-    /*background:url(opacity.png);*/
-    /*-webkit-background-size: contain;*/
-    /*background-size: contain;*/
-    /*position: absolute;*/
-    /*width:100%;*/
-    /*height:100%;*/
-    /*top:0;*/
-    /*left:0;*/
+    content:'';
+    display: block;
+    background:url(opacity.png);
+    -webkit-background-size: contain;
+    background-size: 8px;
+    position: absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
 }
 .fcolorpicker .color-latest .color-item{
     width:26px;
@@ -73,6 +87,7 @@
     display: flex;
     height: 131px;
     /*padding: 8px;*/
+    margin-top:6px;
 }
 .fcolorpicker .color-palette .lightness{
     flex:0 0 212px;
@@ -133,6 +148,7 @@
     height: 14px;
     background: #fff;
     box-sizing: border-box;
+    z-index:9;
 }
 .fcolorpicker .current-color{
     border-radius: 2px;
@@ -172,15 +188,14 @@
     background: red;
     color: #fff;
     cursor: pointer;
-    width: 40px;
-    height: 24px;
+    height: 27px;
     border-radius: 2px;
-    line-height: 24px;
-    padding: 0;
+    line-height: 26px;
+    padding: 0 10px;
     margin-left: 6px;
 }
 .fcolorpicker .color-btn-group .cancel-color{
-    background: #CCCCCC;
+    background: #d9e5f4;
     color: #333;
 }
 .fcolorpicker .color-btn-group .confirm-color{
@@ -189,7 +204,8 @@
 
 
 .fcolorpicker .color-gradient{
-    padding-bottom:30px;
+    width: calc(100% - 18px);
+    margin-left: 9px;
 }
 .fcolorpicker .gradient-bar-container{
     display: flex;
@@ -248,6 +264,14 @@
     margin-right:6px;
     position: relative;
 }
+.fcolorpicker .gradient-bar span{
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    display: block;
+}
 .fcolorpicker .gradient-bar:before{
     content:'';
     display: block;
@@ -258,7 +282,6 @@
     height:100%;
     background: url(opacity.png);
     background-size: 10px;
-    opacity: .2;
 }
 .fcolorpicker .add-gradient{
     flex:0 0 16px;
@@ -269,6 +292,7 @@
 }
 .fcolorpicker .gradient-angle{
     padding-top: 10px;
+    margin-bottom:22px;
 }
 .fcolorpicker .gradient-angle .current-angle{
     width:100%;
@@ -293,7 +317,7 @@
 }
 .fcolorpicker .color-type{
     font-size:14px;
-    margin-bottom:10px;
+    margin-bottom:0px;
 }
 .fcolorpicker .color-type span{
     cursor: pointer;
@@ -301,4 +325,50 @@
 .fcolorpicker .color-type .on{
     color: #57a4ff;
     font-weight: BOLD;
+}
+.fcolorpicker .color-slidedown{
+    position: relative;
+    display: inline-block;
+    padding-right:14px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-right:2px;
+}
+.fcolorpicker .color-slidedown:before{
+    position: absolute;
+    right: 0px;
+    top: 3px;
+    font-size: 12px;
+    color: #666;
+}
+.fcolorpicker .color-slidedown p{
+    margin:0;
+    cursor: pointer;
+}
+.fcolorpicker .color-slidedown ul{
+    display: block;
+    position: absolute;
+    background: #000;
+    z-index: 9;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    line-height: 26px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.3);
+    border-radius: 2px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: #fff;
+    white-space: nowrap;
+    display: none;
+}
+.fcolorpicker .color-slidedown.down ul{
+    display: block;
+}
+.fcolorpicker .color-slidedown ul li{
+    cursor: pointer;
+}
+
+.fcolorpicker .color-slidedown.color-format-type ul{
+    bottom:20px;
 }

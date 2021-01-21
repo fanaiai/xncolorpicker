@@ -6,35 +6,58 @@
 <!--    <link rel="stylesheet" href="fcolorpicker.css">-->
     <style>
         body{
-            background: #ccc;
+            background: #eee;
         }
         #colorpicker{
-            position: fixed;
+            /*position: fixed;*/
             /*right: 0;*/
-            margin-top: 100px;
+            /*margin-top: 100px;*/
             border: 1px solid #fff;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-<div id="colorpicker">
 
+
+<div>
+    <p>全功能 <a id="destroy">销毁</a></p>
+    <div id="colorpicker"></div>
 </div>
-<a id="destroy">销毁</a>
+<div>
+    <p>不显示调色盘</p>
+    <div id="nopallete"></div>
+</div>
+<div>
+    <p>不显示历史</p>
+    <div id="nohistory"></div>
+</div>
+<div>
+    <p>不显示预制颜色</p>
+    <div id="nopre"></div>
+</div>
+<div>
+    <p>不可切换颜色类型</p>
+    <div id="notype"></div>
+</div>
 </body>
-<script src="src/xncolorpicker.js"></script>
+<script src="dist/xncolorpicker.min.js"></script>
 <script>
     var xncolorpicker = new XNColorPicker({
-        color: "linear-gradient(30deg,rgba(233,11,22,1), #ffff00)",
+        color: "linear-gradient(0.0deg,hsla(279,63%,58%,1) 0.0,hsla(198,83%,53%,1) 100.0%)",
         selector: "#colorpicker",
         showprecolor: true,//显示预制颜色
-        prevcolors: [],//预制颜色，有默认
+        prevcolors: null,//预制颜色，不设置则默认
         showhistorycolor: true,//显示历史
         historycolornum: 16,//历史条数
-        format: 'rgba',//rgba hex hsla
+        format: 'hsla',//rgba hex hsla,初始颜色类型
         showPalette:true,//显示色盘
         show:false, //初始化显示
         lang:'cn',// cn 、en
+        colorTypeOption:'single,linear-gradient,radial-gradient',
+        canMove:false,//选择器位置是否可以拖拽
+        alwaysShow:false,
+        autoConfirm:true,
         onError: function (e) {
 
         },
@@ -42,7 +65,107 @@
             console.log("cancel",color)
         },
         onChange:function(color){
-            // console.log("change",color)
+            console.log("change",color)
+        },
+        onConfirm:function(color){
+            console.log("confirm",color)
+        }
+    })
+    var nopallete = new XNColorPicker({
+        color: "#008867",
+        selector: "#nopallete",
+        showprecolor: true,//显示预制颜色
+        prevcolors: null,//预制颜色，不设置则默认
+        showhistorycolor: true,//显示历史
+        historycolornum: 16,//历史条数
+        format: 'hsla',//rgba hex hsla,初始颜色类型
+        showPalette:false,//显示色盘
+        show:false, //初始化显示
+        lang:'cn',// cn 、en
+        colorTypeOption:'single,linear-gradient,radial-gradient',//
+        onError: function (e) {
+
+        },
+        onCancel:function(color){
+            console.log("cancel",color)
+        },
+        onChange:function(color){
+            console.log("change",color)
+        },
+        onConfirm:function(color){
+            console.log("confirm",color)
+        }
+    })
+    var nohistory = new XNColorPicker({
+        color: "#ca9999",
+        selector: "#nohistory",
+        showprecolor: true,//显示预制颜色
+        prevcolors: null,//预制颜色，不设置则默认
+        showhistorycolor: false,//显示历史
+        historycolornum: 16,//历史条数
+        format: 'hsla',//rgba hex hsla,初始颜色类型
+        showPalette:true,//显示色盘
+        show:false, //初始化显示
+        lang:'cn',// cn 、en
+        colorTypeOption:'single,linear-gradient,radial-gradient',//
+        onError: function (e) {
+
+        },
+        onCancel:function(color){
+            console.log("cancel",color)
+        },
+        onChange:function(color){
+            console.log("change",color)
+        },
+        onConfirm:function(color){
+            console.log("confirm",color)
+        }
+    })
+    var nopre = new XNColorPicker({
+        color: "#ff0987",
+        selector: "#nopre",
+        showprecolor: false,//显示预制颜色
+        prevcolors: null,//预制颜色，不设置则默认
+        showhistorycolor: true,//显示历史
+        historycolornum: 16,//历史条数
+        format: 'hsla',//rgba hex hsla,初始颜色类型
+        showPalette:true,//显示色盘
+        show:false, //初始化显示
+        lang:'cn',// cn 、en
+        colorTypeOption:'single,linear-gradient,radial-gradient',//
+        onError: function (e) {
+
+        },
+        onCancel:function(color){
+            console.log("cancel",color)
+        },
+        onChange:function(color){
+            console.log("change",color)
+        },
+        onConfirm:function(color){
+            console.log("confirm",color)
+        }
+    })
+    var notype = new XNColorPicker({
+        color: "#f21fff",
+        selector: "#notype",
+        showprecolor: true,//显示预制颜色
+        prevcolors: null,//预制颜色，不设置则默认
+        showhistorycolor: true,//显示历史
+        historycolornum: 16,//历史条数
+        format: 'hsla',//rgba hex hsla,初始颜色类型
+        showPalette:true,//显示色盘
+        show:false, //初始化显示
+        lang:'cn',// cn 、en
+        colorTypeOption:'single',//
+        onError: function (e) {
+
+        },
+        onCancel:function(color){
+            console.log("cancel",color)
+        },
+        onChange:function(color){
+            console.log("change",color)
         },
         onConfirm:function(color){
             console.log("confirm",color)

@@ -1,8 +1,18 @@
-# 功能说明
+# V1.1.0 2021/01/21
+## 更新功能点
++ 新增对渐变色的支持-径向渐变、线性渐变
++ 修复鼠标事件的bug
++ 新增色彩格式的切换
++ ui升级
++ 新增选择器拖拽事件
+
+# V1.0.0
+## 功能说明
 漂亮的颜色选择器支持 
 + rgba hex hsla 三种色彩格式
 + 支持自定义输入
 + 支持历史颜色
+
 
 # 选择器样式
 ![avatar](https://raw.githubusercontent.com/fanaiai/xncolorpicker/main/1.png)
@@ -37,30 +47,36 @@
         
 ## 选择器配置项
     {
-            color:"#ff0000",//初始颜色，只能是rgba hex hsla，不能是red，green等单词哦
-            selector: "#colorpicker",
+            color:'#ffffff',//初始颜色
+            selector: "",//选择器容器
             showprecolor: true,//显示预制颜色
-            prevcolors: [],//预制颜色，有默认
+            prevcolors: null,//预制颜色,不填为默认
             showhistorycolor: true,//显示历史
             historycolornum: 16,//历史条数
-            format: 'hsla',//rgba hex hsla
-            showPalette:true,//显示色盘
-            show:true, //初始化显示
-            lang:'cn',// cn 、en
-            onError: function (e) {},//错误回调
+            format: 'rgba',//rgba hex hsla,初始颜色类型
+            showPalette: true,//显示色盘
+            show: false, //初始化显示
+            lang: 'cn',// 中英文 cn en
+            colorTypeOption:'single,linear-gradient,radial-gradient',//颜色选择器可选类型，纯色，线性渐变，径向渐变
+            canMove:true,//默认为true
+            autoConfirm:true,//改变颜色时自动确认
+            onError: function (e) {
+            
+            },
             onCancel:function(color){
                 console.log("cancel",color)
-            },//取消选择
+            },
             onChange:function(color){
                 console.log("change",color)
-            },//修改颜色
+            },
             onConfirm:function(color){
                 console.log("confirm",color)
-            }//选择确认
+            }
         }
 
 ## 方法
 + 销毁实例 xncolorpicker.destroy()
++ 清空历史颜色 xncolorpicker.clearHistoryColors()
 
 ## 待开发功能
 + 渐变色支持

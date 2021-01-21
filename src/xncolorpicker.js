@@ -35,42 +35,62 @@ var script = scripts[scripts.length - 1];
 var s = document.querySelector ? script.src : script.getAttribute("src", 4)//IE8直接.src
 // var s =currentlyAddingScript?currentlyAddingScript: document.currentScript.src;
 var csspath = s.substr(0, s.lastIndexOf('/') - 0);
-var jslist = [csspath + "/jquery.min.js", csspath + "/lib/colorformat/colorFormat.js"]
+var jslist = [csspath + "/jquery.min.js", csspath + "/colorFormat.min.js"]
 dynamicLoadJs(jslist);
-var csslist = [csspath + "/xncolorpicker.css", "//at.alicdn.com/t/font_2330183_pruflrov4th.css"]
+var csslist = [csspath + "/xncolorpicker.css", "//at.alicdn.com/t/font_2330183_hjqs7adohe.css"]
 dynamicLoadCss(csslist);
 (function (window) {
     // var that;
     var option = {
+        color:'#ffffff',//初始颜色
+        selector: "",//选择器容器
         showprecolor: true,//显示预制颜色
-        prevcolors: [
-            '#EF534F', '#BA69C8', '#FFD54F', '#81C784', '#7FDEEA', '#90CAF9',
-            '#F44436', '#AB47BC', '#FFC106', '#66BB6A', '#25C6DA', '#4EC3F7',
-            '#E53934', '#9D27B0', '#FFA726', '#4CAF50', '#00ACC1', '#29B6F6',
-            '#D32E30', '#8F24AA', '#FB8C01', '#378E3C', '#0097A7', '#02AAF4',
-            '#C62928', '#7B1FA2', '#F57C02', '#2F7D31', '#00838F', '#029BE5',
-            '#B71B1C', '#6A1B9A', '#EF6C00', '#34691D', '#006164', '#0388D1',
-            '#980A0B', '#4A148C', '#E65100', '#1A5E20', '#004D41', '#01579B',
-            'rgba(0,0,0,0)', '#FFFFFF', '#DBDBDB', '#979797', '#606060', '#000000',
-        ],//预制颜色
+        prevcolors: ["#EF534F", "#BA69C8", "#FFD54F", "#81C784", "#7FDEEA", "#90CAF9", "#F44436", "#AB47BC", "#FFC106", "#66BB6A", "#25C6DA", "#4EC3F7", "#E53934", "#9D27B0", "#FFA726", "#4CAF50", "#00ACC1", "#29B6F6", "#D32E30", "#8F24AA", "#FB8C01", "#378E3C", "#0097A7", "#02AAF4", "#C62928", "#7B1FA2", "#F57C02", "#2F7D31", "#00838F", "#029BE5", "#B71B1C", "#6A1B9A", "#EF6C00", "#34691D", "#006164", "#0388D1", "#980A0B", "#4A148C", "#E65100", "#1A5E20", "#004D41", "#01579B", "#00000000", "#FFFFFF", "#DBDBDB", "#979797", "#606060", "#000000"],//预制颜色
         showhistorycolor: true,//显示历史
         historycolornum: 16,//历史条数
-        format: 'hsla',//rgba hex hsla
+        format: 'rgba',//rgba hex hsla,初始颜色类型
         showPalette: true,//显示色盘
-        show: true, //初始化显示
-        lang: 'cn',// cn 、en
-        colorType: 'single',//single,linear-gradient,radial-gradient,初始化颜色类型
-        colorTypeOption: ['single', 'linear-gradient', 'radial-gradient'],//可切换的颜色类型
+        show: false, //初始化显示
+        alwaysShow:false,//选择器是否一直显示
+        lang: 'cn',// 中英文 cn en
+        colorTypeOption:'single,linear-gradient,radial-gradient',//颜色选择器可选类型
+        canMove:true,//默认为true
+        autoConfirm:false,//改变颜色，自动确定
     }
 
     function XNColorPicker(options) {
         // that = this;
+        this.pos={
+            left:0,top:0
+        }
+        this.moved=false;
         this.id = this.getRandomString();
         this.btns = {
             "cn": ["取消", "确定"],
             "en": ["Cancel", "OK"],
         }
+        this.colorTypeList={
+            "cn":{
+                "single":"纯色",
+                "linear-gradient":"线性渐变",
+                "radial-gradient":"径向渐变",
+            },
+            "en":{
+                "single":"Solid",
+                "linear-gradient":"Linear",
+                "radial-gradient":"Radial",
+            }
+        }
         this.option = $.extend(true, {}, option, options);
+        // this.option.prevcolors=((this.option.prevcolors||option.prevcolors).split(','));
+        if(!options.prevcolors){
+            this.option.prevcolors=option.prevcolors;
+        }
+        else{
+            this.option.prevcolors=options.prevcolors;
+        }
+        this.option.colorTypeOption=this.option.colorTypeOption?this.option.colorTypeOption.split(','):['single','linear-gradient', 'radial-gradient']
+        this.currentColorFormat=this.option.format;
         if (typeof this.option.selector == 'string') {
             this.$el = $(this.option.selector);
         } else {
@@ -109,8 +129,11 @@ dynamicLoadCss(csslist);
         },
         changeShow(hide) {
             if ($(this.dom) && $(this.dom).css('display') == 'block' || hide) {
-                $(this.dom).empty();
-                $(this.dom).hide();
+                if(!this.option.alwaysShow){
+                    $(this.dom).empty();
+                    $(this.dom).hide();
+                    this.moved=false;
+                }
             } else {
                 this.init();
                 $(this.dom).show();
@@ -118,7 +141,6 @@ dynamicLoadCss(csslist);
         },
         init: function () {
             this.initDom();
-
             this.initColorFormat();
             if (this.option.showPalette) {
                 this.initPalette();
@@ -131,6 +153,7 @@ dynamicLoadCss(csslist);
             this.getHistoryColors();
             this.setPosition();
             this.addPosEvent();
+            this.changeColorFormatType();
             $(this.dom).hide();
         },
         rendGradientDom() {
@@ -143,15 +166,24 @@ dynamicLoadCss(csslist);
             if (!container) {
                 container = document.createElement('div')
                 container.classList.add('fcolorpicker')
+                if(this.option.canMove){
+                    container.classList.add('canmove')
+                }
                 container.id = this.id;
                 reRend = false;
             }
+            var colortypehtml=''
+            for (let i=0;i<this.option.colorTypeOption.length;i++){
+                var type=this.option.colorTypeOption[i];
+                colortypehtml+=`<li class="color-type-item" data-type="${type}">${this.colorTypeList[this.option.lang][type]}</li>`
+            }
             var html =
                 `
-            <div class="color-type">
-               <span class="single">纯色</span>
-               <span class="linear-gradient">线性渐变</span>
-               <span class="radial-gradient">径向渐变</span>
+            <div class="color-type color-slidedown iconfontcolorpicker iconcolorpickerxiala">
+               <p class="color-slidedown-curbox"></p>
+               <ul>
+                   ${colortypehtml}
+               </ul>
             </div>
             <div class="color-gradient">
                 <div class="gradient-bar-container">
@@ -164,7 +196,7 @@ dynamicLoadCss(csslist);
                         </div>
                     </div>
                     <div class="gradient-bar">
-                    
+                        <span></span>
                     </div>
                     <a class="add-gradient iconfontcolorpicker iconcolorpicker11"></a>
                 </div>
@@ -195,6 +227,14 @@ dynamicLoadCss(csslist);
 
             <div class="color-btns">
                 <div class="color-preview">
+                    <div class="color-format-type color-slidedown iconfontcolorpicker iconcolorpickerxiala">
+                       <p class="color-slidedown-curbox">RGBA</p>
+                       <ul>
+                        <li class="color-format-type-item" data-type="rgba">RGBA</li>
+                        <li class="color-format-type-item" data-type="hex">HEX</li>
+                        <li class="color-format-type-item" data-type="hsla">HSLA</li>
+                       </ul>
+                    </div>
                     <div class="current-color"></div>
                     <div class="current-color-value">
                         <input type="text" onfocus="this.select()">
@@ -224,6 +264,9 @@ dynamicLoadCss(csslist);
             if (!this.option.showhistorycolor) {
                 $(this.dom).find(".color-latest").hide();
             }
+            if(this.option.colorTypeOption.length<2){
+                $(this.dom).find(".color-type").remove();
+            }
             this.setPosition()
             if (!reRend) {
                 this.addEvent();
@@ -239,9 +282,18 @@ dynamicLoadCss(csslist);
                 that.setPosition();
             })
         },
-        setPosition: function () {
-            // console.log(this.curcolordom.getBoundingClientRect(),document.documentElement.clientWidth,document.documentElement.clientHeight)
+        moveDom(startpos,e){
             if (!this.dom) {
+                return;
+            }
+            this.moved=true;
+            var newleft=e.clientX-startpos.x+this.pos.left;
+            var newtop=e.clientY-startpos.y+this.pos.top;
+            this.dom.style.top = newtop + "px";
+            this.dom.style.left = newleft + "px";
+        },
+        setPosition: function () {
+            if (!this.dom || this.moved) {
                 return;
             }
             var wwidth = document.documentElement.clientWidth;
@@ -249,7 +301,6 @@ dynamicLoadCss(csslist);
             var curcolordom = this.$el[0].querySelector("div")
             var top = curcolordom.getBoundingClientRect().top;
             var left = curcolordom.getBoundingClientRect().left;
-            // console.log(this.curcolordom,top)
             var domwidth = $(this.dom).outerWidth();
             var domheight = $(this.dom).outerHeight();
             if (wwidth - left <= domwidth) {
@@ -267,17 +318,32 @@ dynamicLoadCss(csslist);
             }
             this.dom.style.top = top + "px";
             this.dom.style.left = left + "px";
+            this.pos={
+                left:left,
+                top:top
+            }
         },
         addHistoryColors: function () {
+            var currentColor=this.color[this.currentColorFormat];
+            // if(this.currentColorType!='single'){
+            //     currentColor=this.gradientColor.str;
+            // }
             for (let i = 0; i < this.hiscolors.length; i++) {
-                if (colorFormat({color: this.hiscolors[i], format: "rgba"}).complete == this.color.rgba) {
+                // if(this.currentColorType=='single'){
+                if (colorFormat({color: this.hiscolors[i], format: this.currentColorFormat}).complete == currentColor) {
                     this.hiscolors.splice(i, 1);
                     break;
                 }
+            // }
+            //     else{
+            //         if(this.hiscolors[i]==currentColor){
+            //             this.hiscolors.splice(i, 1);
+            //             break;
+            //         }
+            //     }
             }
-            this.hiscolors.unshift(this.color.rgba);
+            this.hiscolors.unshift(currentColor);
             window.localStorage.setItem("fcolorpicker", this.hiscolors.join(";"));
-            //this.option.onChange(this.color[this.option.format]);
             this.rendHisColors();
             this.setPosition();
         },
@@ -287,6 +353,12 @@ dynamicLoadCss(csslist);
             this.hiscolors = (hiscolors || "").split(";");
             this.rendHisColors();
         },
+        clearHistoryColors(){
+            this.hiscolors=[];
+            window.localStorage.setItem("fcolorpicker", this.hiscolors.join(";"));
+            this.rendHisColors();
+            this.setPosition();
+        },
         rendHisColors: function () {
             if (!this.option.showhistorycolor) {
                 return;
@@ -295,7 +367,9 @@ dynamicLoadCss(csslist);
             for (let i = 0; i < (this.option.historycolornum < 0 ? this.hiscolors.length : this.option.historycolornum); i++) {
                 if (this.hiscolors[i] && this.hiscolors[i] != '') {
                     let html = `
-                    <div class="color-item" style="background:${this.hiscolors[i]}" data-color="${this.hiscolors[i]}"></div>
+                    <div class="color-item" data-color="${this.hiscolors[i]}">
+                    <span style="background:${this.hiscolors[i]}"></span>
+</div>
                 `
                     $(this.dom).find(".color-latest").append(html);
                 }
@@ -307,24 +381,26 @@ dynamicLoadCss(csslist);
             }
             for (let i = 0; i < this.option.prevcolors.length; i++) {
                 let html = `
-                    <div class="color-item" style="background:${this.option.prevcolors[i]}" data-color="${this.option.prevcolors[i]}"></div>
+                    <div class="color-item" data-color="${this.option.prevcolors[i]}">
+                    <span style="background:${this.option.prevcolors[i]}"></span>
+</div>
                 `
                 $(this.dom).find(".color-recommend").append(html);
             }
         },
-        addBlurEvent(){
+        addBlurEvent() {
             var that = this;
-            this.dom.querySelector("input").onblur=(e) => {
+            this.dom.querySelector("input").onblur = (e) => {
                 // if (e.target.nodeName == 'input') {
-                    that.initColorFormat(that.dom.querySelector(".current-color-value input").value);
-                    that.fillOpacity();
-                    that.fillPalette();
-                    that.addHistoryColors();
+                that.initColorFormat(that.dom.querySelector(".current-color-value input").value);
+                that.fillOpacity();
+                that.fillPalette();
+                that.addHistoryColors();
                 // }
             }
         },
-        cancleFun(){
-            var that=this;
+        cancleFun() {
+            var that = this;
             that.initColorFormat(this.lastColor, true)
             var confirmcolor = {
                 colorType: this.currentColorType
@@ -340,6 +416,25 @@ dynamicLoadCss(csslist);
             that.option.onCancel(confirmcolor);
             that.changeShow(true);
             return;
+        },
+        getCurrentColor(isConfirm){
+            var that=this;
+            that.initColorFormat(that.dom.querySelector(".current-color-value input").value, true)
+            that.addHistoryColors();
+            var confirmcolor = {
+                colorType: this.currentColorType
+            };
+            if (this.currentColorType == 'single') {
+                confirmcolor.color = that.color;
+                if(isConfirm){
+                this.lastColor = this.color.rgba;}
+            } else {
+                confirmcolor.color = this.gradientColor;
+                if(isConfirm){
+                this.lastColor = this.gradientColor.str;}
+            }
+            this.changeCurColorDom()
+            return confirmcolor;
         },
         addEvent: function () {
             var t = null;
@@ -372,8 +467,11 @@ dynamicLoadCss(csslist);
                 }
                 startpos.x = e.clientX;
                 startpos.y = e.clientY;
-                that.changeColor(t, e, null);
-                that.option.onChange(that.color[that.option.format]);
+                if(t){
+                    that.changeColor(t, e, null);
+                    // var confirmcolor=that.getCurrentColor()
+                    // that.option.onChange(confirmcolor);
+                }
                 if ($t.parents(".gradient-item")[0]) {
                     $t = $t.parents('.gradient-item')
                 }
@@ -389,8 +487,8 @@ dynamicLoadCss(csslist);
                         per: 100,
                         color: '#ffffff'
                     })
-                    this.gradientColor=this.revertGradientToString(this.gradientColor.arry)
-                    this.gradientIndex = this.gradientColor.arry.colors.length-1;
+                    this.gradientColor = this.revertGradientToString(this.gradientColor.arry)
+                    this.gradientIndex = this.gradientColor.arry.colors.length - 1;
                     this.rendInputValue();
                     this.rendGradientColors();
                     this.updateGradientBar();
@@ -399,23 +497,26 @@ dynamicLoadCss(csslist);
                     startpos.isGradientBar = false;
                     startpos.isAngleBar = true;
                 }
+                if($t[0]==this.dom && this.option.canMove){
+                    startpos.isMove=true;
+                }
+                else{
+                    startpos.isMove=false;
+                }
             })
             document.addEventListener("mousemove", (e) => {
-                // if ($(e.target).parents("." + t).length > 0) {
                 if (t) {
                     that.changeColor(t, e, startpos);
-                    that.option.onChange(that.color[that.option.format]);
                 } else if (startpos.isGradientBar) {//如果移动渐变滑块
                     var per = ((e.clientX - $(this.dom).find(".gradient-colors")[0].getBoundingClientRect().left) * 100 / $(this.dom).find(".gradient-colors")[0].getBoundingClientRect().width).toFixed(1);
-                    if(this.gradientColor.arry.colors.length<3){
+                    if (this.gradientColor.arry.colors.length < 3) {
                         if (per > 100) {
                             per = 100;
                         }
                         if (per < 0) {
                             per = 0;
                         }
-                    }
-                    else{
+                    } else {
                         if (per > 100 && per <= 105) {
                             per = 100;
                         }
@@ -429,10 +530,9 @@ dynamicLoadCss(csslist);
                     this.updateGradientColors(true);
                     this.changeCurColorDom();
 
-                    if(per<-5|| per>105){
+                    if (per < -5 || per > 105) {
                         startpos.$ele.addClass("deleting-item")
-                    }
-                    else{
+                    } else {
                         startpos.$ele.removeClass("deleting-item")
                     }
                 } else if (startpos.isAngleBar) {
@@ -448,29 +548,49 @@ dynamicLoadCss(csslist);
                     this.updateGradientColors();
                     this.changeCurColorDom();
                 }
-                // }
+                if(startpos.isMove){
+                    this.moveDom(startpos,e);
+                }
             })
             document.addEventListener("mouseup", (e) => {
                 if (startpos.isGradientBar) {
                     var per = ((e.clientX - $(this.dom).find(".gradient-colors")[0].getBoundingClientRect().left) * 100 / $(this.dom).find(".gradient-colors")[0].getBoundingClientRect().width).toFixed(1);
-                    if(this.gradientColor.arry.colors.length>2){
+                    if (this.gradientColor.arry.colors.length > 2) {
                         if (per > 105 || per < -5) {
                             this.gradientColor.arry.colors.splice(this.gradientIndex, 1);
                             startpos.$ele.remove();
                             this.updateGradientBar();
-                            this.gradientColor=this.revertGradientToString(this.gradientColor.arry)
+                            this.gradientColor = this.revertGradientToString(this.gradientColor.arry)
                             this.rendInputValue();
+
                         }
-                    }
-                    else{
+
+                    } else {
 
                     }
-
-
+                    var confirmcolor=that.getCurrentColor(this.option.autoConfirm)
+                    that.option.onChange(confirmcolor);
+                    if(this.option.autoConfirm){
+                        this.option.onConfirm(confirmcolor)
+                    }
+                }
+                if(t || startpos.isAngleBar){
+                    var confirmcolor=that.getCurrentColor(this.option.autoConfirm)
+                    that.option.onChange(confirmcolor);
+                    if(this.option.autoConfirm){
+                        this.option.onConfirm(confirmcolor)
+                    }
                 }
                 t = null;
                 startpos.isGradientBar = false;
                 startpos.isAngleBar = false;
+                if(startpos.isMove){
+                    var newleft=e.clientX-startpos.x+this.pos.left;
+                    var newtop=e.clientY-startpos.y+this.pos.top;
+                    this.pos.left=newleft;
+                    this.pos.top=newtop;
+                }
+                startpos.isMove=false;
             })
             this.dom.addEventListener("click", (e) => {
                 e.stopPropagation();
@@ -484,45 +604,62 @@ dynamicLoadCss(csslist);
                         this.updateGradientColors();
                         this.changeCurColorDom();
                     }
+                    var confirmcolor=that.getCurrentColor(this.option.autoConfirm)
+                    that.option.onChange(confirmcolor);
+                    if(this.option.autoConfirm){
+                        this.option.onConfirm(confirmcolor)
+                    }
                     return;
                 }
                 if ($t.hasClass("cancel-color")) {
                     this.cancleFun();
                 }
                 if ($t.hasClass("confirm-color")) {
-                    that.initColorFormat(that.dom.querySelector(".current-color-value input").value, true)
-                    that.addHistoryColors();
-                    var confirmcolor = {
-                        colorType: this.currentColorType
-                    };
-                    if (this.currentColorType == 'single') {
-                        confirmcolor.color = that.color;
-                        this.lastColor = this.color.rgba;
-                    } else {
-                        confirmcolor.color = this.gradientColor;
-                        this.lastColor = this.gradientColor.str;
-                    }
+                    var confirmcolor=that.getCurrentColor(true);
                     that.option.onConfirm(confirmcolor);
                     that.changeShow(true);
-                    this.changeCurColorDom()
                     return;
                 }
-                if ($t.parents('.color-type')[0] && !$t.hasClass("on")) {
-                    var type = $t[0].className;
-                    this.currentColorType = type;
-                    this.changeColorType();
+                if($t.hasClass('color-slidedown-curbox')){
+                    $t=$t.parent()
+                }
+                if($t.hasClass('color-slidedown')){
+                    if($t.hasClass('down')){
+                        $t.removeClass('down')
+                    }
+                    else{
+                        $t.addClass('down')
+                    }
+                }
+                if ($t.hasClass('color-type-item')) {
+                    if(!$t.hasClass("on")) {
+                        var type = $t.attr('data-type');
+                        this.currentColorType = type;
+                        this.changeColorType();
+                    }
+                    else{
+                        $t.parents('.color-slidedown').removeClass('down')
+                    }
+                }
+                if ($t.hasClass('color-format-type-item')) {
+                    if(!$t.hasClass("on")){
+                        var type = $t.attr('data-type');
+                        this.currentColorFormat = type;
+                        this.changeColorFormatType();
+                    }
+                    else{
+                        $t.parents('.color-slidedown').removeClass('down')
+                    }
                 }
             })
             var mousedownFunc = (e) => {
                 e.stopPropagation();
                 if (that.dom && e.target != that.dom && $(e.target).parents(".fcolorpicker")[0] != that.dom && $(e.target)[0] != that.curcolordom) {
-                    // that.getColorFormat(that.option.color);
-                    // that.fillOpacity();
-                    // that.fillPalette();
                     if ($(that.dom).css('display') == 'block') {
                         that.cancleFun();
                     }
                 }
+                $(this.dom).find(".color-slidedown").not($(e.target).parents('.color-slidedown')[0]).removeClass('down')
             }
             this.removeMouseDownEvent = () => {
                 document.removeEventListener("mousedown", mousedownFunc)
@@ -564,18 +701,18 @@ dynamicLoadCss(csslist);
                         y = 0;
                     }
                     if (x > this.dom.querySelector('.lightness canvas').getBoundingClientRect().width) {
-                        x = this.dom.querySelector('.lightness canvas').getBoundingClientRect().width ;
+                        x = this.dom.querySelector('.lightness canvas').getBoundingClientRect().width;
                     }
                     if (y > this.dom.querySelector('.lightness canvas').getBoundingClientRect().height) {
                         y = this.dom.querySelector('.lightness canvas').getBoundingClientRect().height;
                     }
                     // var imageData = this['ctx' + t].getImageData(x, y, 1, 1).data;
                     // color = 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',' + this.color.rgbav[3] + ')';
-                    var h=this.color.hslav[0];
-                    var s=x/this.canvasSize.width*100;
-                    var b=100-y/this.canvasSize.height*100;
-                    var rgb = this.HSBToRGB({h:h, s:s, b:b});
-                    color='rgba('+rgb.r+','+rgb.g+','+rgb.b+','+this.color.rgbav[3]+')';
+                    var h = this.color.hslav[0];
+                    var s = x / this.canvasSize.width * 100;
+                    var b = 100 - y / this.canvasSize.height * 100;
+                    var rgb = this.HSBToRGB({h: h, s: s, b: b});
+                    color = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + this.color.rgbav[3] + ')';
                     this.lightbar.style.top = y + 'px';
                     this.lightbar.style.left = x + 'px';
                     break;
@@ -597,28 +734,50 @@ dynamicLoadCss(csslist);
             this.changeCurColorDom();
             // console.log(color)
         },
-        HSBToRGB (hsb){
-        var rgb = {};
-        var h = hsb.h;
-        var s = hsb.s*255/100;
-        var b = hsb.b*255/100;
-        if(s == 0){
-            rgb.r = rgb.g = rgb.b = b;
-        }else{
-            var t1 = b;
-            var t2 = (255 - s) * b /255;
-            var t3 = (t1 - t2) * (h % 60) /60;
-            if(h == 360) h = 0;
-            if(h < 60) {rgb.r=t1; rgb.b=t2; rgb.g=t2+t3}
-            else if(h < 120) {rgb.g=t1; rgb.b=t2; rgb.r=t1-t3}
-            else if(h < 180) {rgb.g=t1; rgb.r=t2; rgb.b=t2+t3}
-            else if(h < 240) {rgb.b=t1; rgb.r=t2; rgb.g=t1-t3}
-            else if(h < 300) {rgb.b=t1; rgb.g=t2; rgb.r=t2+t3}
-            else if(h < 360) {rgb.r=t1; rgb.g=t2; rgb.b=t1-t3}
-            else {rgb.r=0; rgb.g=0; rgb.b=0}
-        }
-        return {r:Math.round(rgb.r), g:Math.round(rgb.g), b:Math.round(rgb.b)};
-    },
+        HSBToRGB(hsb) {
+            var rgb = {};
+            var h = hsb.h;
+            var s = hsb.s * 255 / 100;
+            var b = hsb.b * 255 / 100;
+            if (s == 0) {
+                rgb.r = rgb.g = rgb.b = b;
+            } else {
+                var t1 = b;
+                var t2 = (255 - s) * b / 255;
+                var t3 = (t1 - t2) * (h % 60) / 60;
+                if (h == 360) h = 0;
+                if (h < 60) {
+                    rgb.r = t1;
+                    rgb.b = t2;
+                    rgb.g = t2 + t3
+                } else if (h < 120) {
+                    rgb.g = t1;
+                    rgb.b = t2;
+                    rgb.r = t1 - t3
+                } else if (h < 180) {
+                    rgb.g = t1;
+                    rgb.r = t2;
+                    rgb.b = t2 + t3
+                } else if (h < 240) {
+                    rgb.b = t1;
+                    rgb.r = t2;
+                    rgb.g = t1 - t3
+                } else if (h < 300) {
+                    rgb.b = t1;
+                    rgb.g = t2;
+                    rgb.r = t2 + t3
+                } else if (h < 360) {
+                    rgb.r = t1;
+                    rgb.g = t2;
+                    rgb.b = t1 - t3
+                } else {
+                    rgb.r = 0;
+                    rgb.g = 0;
+                    rgb.b = 0
+                }
+            }
+            return {r: Math.round(rgb.r), g: Math.round(rgb.g), b: Math.round(rgb.b)};
+        },
         updateGradientColors(ismoveItem) {
             this.gradientColor.arry.colors[this.gradientIndex].color = this.color.rgba;
             this.updateGradientBar();
@@ -629,14 +788,13 @@ dynamicLoadCss(csslist);
                 this.rendGradientColors();
             }
         },
-        rendInputValue(){
-            if(this.currentColorType!='single'){
+        rendInputValue() {
+            if (this.currentColorType != 'single') {
                 this.dom.querySelector(".current-color").style.background = this.gradientColor.str;
                 this.dom.querySelector(".current-color-value input").value = this.gradientColor.str;
-            }
-            else{
-                this.dom.querySelector(".current-color").style.background = this.color[this.option.format];
-                this.dom.querySelector(".current-color-value input").value = this.color[this.option.format];
+            } else {
+                this.dom.querySelector(".current-color").style.background = this.color[this.currentColorFormat];
+                this.dom.querySelector(".current-color-value input").value = this.color[this.currentColorFormat];
             }
         },
         initColorBand: function () {
@@ -666,6 +824,9 @@ dynamicLoadCss(csslist);
             this.fillOpacity();
         },
         fillOpacity: function () {
+            if(!this.ctxopacity){
+                return;
+            }
             this.ctxopacity.clearRect(0, 0, 10, this.canvasSize.height)
             var grdWhite = this.ctxlightness.createLinearGradient(0, 0, 10, this.canvasSize.height);
             grdWhite.addColorStop(0, 'rgba(' + this.color.rgbav[0] + ',' + this.color.rgbav[1] + ',' + this.color.rgbav[2] + ',1)');
@@ -684,6 +845,9 @@ dynamicLoadCss(csslist);
 
         },
         fillPalette() {
+            if(!this.ctxlightness){
+                return;
+            }
             this.ctxlightness.fillStyle = "hsla(" + this.color.hslav[0] + ",100%,50%,1)";
             var width1 = this.canvasSize.width;
             var height1 = this.canvasSize.height;
@@ -700,42 +864,45 @@ dynamicLoadCss(csslist);
             this.ctxlightness.fillRect(0, 0, width1, height1);
             this.updatelightbar();
         },
-        updatelightbar(){
+        updatelightbar() {
             this.lightbar = this.dom.querySelector(".lightbar");
-            var hsb=this.RGBToHSB({r:this.color.rgbav[0],g:this.color.rgbav[1],b:this.color.rgbav[2],})
-            var x=hsb['s']*this.canvasSize.width/100;
-            var y=(100-hsb['b'])*this.canvasSize.height/100;
+            var hsb = this.RGBToHSB({r: this.color.rgbav[0], g: this.color.rgbav[1], b: this.color.rgbav[2],})
+            var x = hsb['s'] * this.canvasSize.width / 100;
+            var y = (100 - hsb['b']) * this.canvasSize.height / 100;
             this.lightbar.style.top = y + 'px';
             this.lightbar.style.left = x + 'px';
         },
-        RGBToHSB(rgb){
-        var hsb = {h:0, s:0, b:0};
-        var min = Math.min(rgb.r, rgb.g, rgb.b);
-        var max = Math.max(rgb.r, rgb.g, rgb.b);
-        var delta = max - min;
-        hsb.b = max;
-        hsb.s = max != 0 ? 255*delta/max : 0;
-        if(hsb.s != 0){
-            if(rgb.r == max){
-                hsb.h = (rgb.g - rgb.b) / delta;
-            }else if(rgb.g == max){
-                hsb.h = 2 + (rgb.b - rgb.r) / delta;
-            }else{
-                hsb.h = 4 + (rgb.r - rgb.g) / delta;
+        RGBToHSB(rgb) {
+            var hsb = {h: 0, s: 0, b: 0};
+            var min = Math.min(rgb.r, rgb.g, rgb.b);
+            var max = Math.max(rgb.r, rgb.g, rgb.b);
+            var delta = max - min;
+            hsb.b = max;
+            hsb.s = max != 0 ? 255 * delta / max : 0;
+            if (hsb.s != 0) {
+                if (rgb.r == max) {
+                    hsb.h = (rgb.g - rgb.b) / delta;
+                } else if (rgb.g == max) {
+                    hsb.h = 2 + (rgb.b - rgb.r) / delta;
+                } else {
+                    hsb.h = 4 + (rgb.r - rgb.g) / delta;
+                }
+            } else {
+                hsb.h = -1;
             }
-        }else{
-            hsb.h = -1;
-        };
-        if(max == min){
-            hsb.h = 0;
-        };
-        hsb.h *= 60;
-        if(hsb.h < 0) {
-            hsb.h += 360;
-        };
-        hsb.s *= 100/255;
-        hsb.b *= 100/255;
-        return hsb;
+            ;
+            if (max == min) {
+                hsb.h = 0;
+            }
+            ;
+            hsb.h *= 60;
+            if (hsb.h < 0) {
+                hsb.h += 360;
+            }
+            ;
+            hsb.s *= 100 / 255;
+            hsb.b *= 100 / 255;
+            return hsb;
         },
         setColor: function (color) {
             this.option.color = color;
@@ -744,9 +911,9 @@ dynamicLoadCss(csslist);
         getColor: function (color) {
             return this.color;
         },
-        initColorFormat(color,isConfirm) {
+        initColorFormat(color, isConfirm) {
             var color = color || this.lastColor;
-            if (typeof color == 'Object') {
+            if (typeof color == 'object') {
                 this.gradientColor = this.revertGradientToString(color)
                 if (this.gradientColor.str.indexOf('linear-gradient') > -1) {
                     this.currentColorType = 'linear-gradient';
@@ -764,14 +931,11 @@ dynamicLoadCss(csslist);
                 this.getColorFormat(color || "#000");
                 this.currentColorType = 'single';
             }
-            if(isConfirm){
+            if (isConfirm) {
                 return;
             }
             this.changeColorType(true)
             if (this.currentColorType != 'single') {
-                // this.dom.querySelector(".current-color").style.background = this.gradientColor.str;
-                // this.dom.querySelector(".current-color-value input").value = this.gradientColor.str;
-                // this.rendGradientColors();
                 this.setCurrentGradientColor();
                 this.updateAngleBar();
                 this.updateGradientColors();
@@ -779,7 +943,6 @@ dynamicLoadCss(csslist);
             }
         },
         setCurrentGradientColor() {
-            console.log(this.gradientColor.arry.colors, this.gradientIndex)
             this.getColorFormat(this.gradientColor.arry.colors[this.gradientIndex].color)
         },
         updateAngleBar() {
@@ -791,7 +954,7 @@ dynamicLoadCss(csslist);
         },
         updateGradientBar() {
             var back = this.revertGradientToString(this.gradientColor.arry, true)
-            $(this.dom).find('.gradient-bar').css("background", back.str)
+            $(this.dom).find('.gradient-bar span').css("background", back.str)
             $(this.dom).find(".gradient-item").removeClass("on").eq(this.gradientIndex).addClass("on")
         },
         rendGradientColors() {
@@ -805,42 +968,67 @@ dynamicLoadCss(csslist);
             $(this.dom).find(".gradient-colors").empty().append(list)
             $(this.dom).find(".gradient-item").removeClass("on").eq(this.gradientIndex).addClass("on")
         },
-        setColorTypeDom(){
-            $(this.dom).find('.color-type span').removeClass('on')
-            $(this.dom).find('.' + this.currentColorType).addClass('on')
+        setColorTypeDom() {
+            if(!$(this.dom).find('.color-type')[0]){
+                return;
+            }
+            $(this.dom).find('.color-type li').removeClass('on')
+            $(this.dom).find('.color-type-item[data-type='+this.currentColorType+']').addClass('on')
+            $(this.dom).find('.color-type').removeClass('down');
+            $(this.dom).find('.color-type .color-slidedown-curbox')[0].innerHTML=$(this.dom).find('.color-type-item[data-type='+this.currentColorType+']')[0].innerHTML;
+        },
+        changeColorFormatType(){
+            $(this.dom).find('.color-format-type li').removeClass('on')
+            $(this.dom).find('.color-format-type-item[data-type='+this.currentColorFormat+']').addClass('on')
+            $(this.dom).find('.color-format-type').removeClass('down');
+            $(this.dom).find('.color-format-type .color-slidedown-curbox')[0].innerHTML=$(this.dom).find('.color-format-type-item[data-type='+this.currentColorFormat+']')[0].innerHTML;
+            var confirmcolor=this.getCurrentColor(this.option.autoConfirm)
+            this.rendInputValue();
+            this.option.onChange(confirmcolor);
+            if(this.option.autoConfirm){
+                this.option.onConfirm(confirmcolor)
+            }
         },
         changeColorType(justInit) {
-            this.setColorTypeDom();
             this.gradientIndex = 0;
+            var mustChange=this.option.colorTypeOption.indexOf(this.currentColorType)<0;
+            if(mustChange){
+                this.currentColorType=this.option.colorTypeOption[0]
+            }
             if (this.currentColorType == 'single') {
-                if(!justInit){
-                this.getColorFormat(this.gradientColor.arry.colors[0].color);}
+                if (!justInit || mustChange) {
+                    this.getColorFormat(this.gradientColor?this.gradientColor.arry.colors[0].color:'#ffffff');
+                }
                 $(this.dom).find('.color-gradient').hide();
             } else {
-                if(!justInit){
-                if (!this.gradientColor) {
-                    this.gradientColor = {
-                        type: this.currentColorType,
+                if (!justInit || mustChange) {
+                    if (!this.gradientColor) {
+                        this.gradientColor = {
+                            type: this.currentColorType,
+                        }
+                        this.initColorFormat({
+                            type: this.currentColorType,
+                            angle: 0,
+                            colors: [{per:0,color:this.color.rgba}, {per:100,color:'rgba(0,0,0,0)'}]
+                        })
                     }
-                    this.initColorFormat({type: this.currentColorType, angle: 0, colors: [this.color.rgba, 'rgba(0,0,0,0)']})
-                }}
-                if(this.gradientColor.arry.type!=this.currentColorType){
-                this.gradientColor.arry.type=this.currentColorType;
-                this.gradientColor=this.revertGradientToString(this.gradientColor.arry)
+                }
+                if (this.gradientColor.arry.type != this.currentColorType) {
+                    this.gradientColor.arry.type = this.currentColorType;
+                    this.gradientColor = this.revertGradientToString(this.gradientColor.arry)
                 }
                 $(this.dom).find('.color-gradient').show();
                 this.rendGradientColors();
                 this.updateGradientBar();
                 this.updateAngleBar();
                 this.changeCurColorDom();
-                // this.rend
-                if(this.currentColorType=='linear-gradient'){
+                if (this.currentColorType == 'linear-gradient') {
                     $(this.dom).find('.gradient-angle').show();
-                }
-                else{
+                } else {
                     $(this.dom).find('.gradient-angle').hide();
                 }
             }
+            this.setColorTypeDom();
             this.rendInputValue();
             this.setPosition();
         },
@@ -860,7 +1048,7 @@ dynamicLoadCss(csslist);
             if (this.currentColorType == 'single') {
                 this.changeCurColorDom();
                 this.dom.querySelector(".current-color").style.background = this.color.rgba;
-                this.dom.querySelector(".current-color-value input").value = this.color[this.option.format];
+                this.dom.querySelector(".current-color-value input").value = this.color[this.currentColorFormat];
             }
             this.setBarPos();
         },
@@ -882,7 +1070,7 @@ dynamicLoadCss(csslist);
             };
             if ((!color.rgba || color.rgba.indexOf("NaN") > -1)) {
                 if (this.dom) {
-                    this.dom.querySelector(".current-color-value input").value = this.color[this.option.format];
+                    this.dom.querySelector(".current-color-value input").value = this.color[this.currentColorFormat];
                     return;
                 } else {
                     return;
@@ -923,10 +1111,10 @@ dynamicLoadCss(csslist);
 
             var obj = {
                 type: type,
-                angle: type == 'linear-gradient'?(parseFloat(arry[0])).toFixed(0):0,
+                angle: type == 'linear-gradient' ? (parseFloat(arry[0])).toFixed(0) : 0,
                 colors: []
             }
-            for (let i = (type == 'linear-gradient'?1:0); i < arry.length; i++) {
+            for (let i = (type == 'linear-gradient' ? 1 : 0); i < arry.length; i++) {
                 let color = arry[i].split(' ')
                 obj.colors.push(
                     {
@@ -936,19 +1124,21 @@ dynamicLoadCss(csslist);
                 )
             }
             return {
-                str: value,
+                str: this.revertGradientToString(obj).str,
                 arry: obj
             }
         },
         revertGradientToString: function (value, isbar) {
-            var gradient = (isbar?'linear-gradient':value.type) + '(';
+            var gradient = (isbar ? 'linear-gradient' : value.type) + '(';
             if (isbar) {
                 gradient += 'to right,';
             } else if (value.type == 'linear-gradient') {
                 gradient += parseFloat(value.angle).toFixed(1) + 'deg,';
             }
             for (let i = 0; i < value.colors.length; i++) {
-                gradient += this.getColorFormatFunc(value.colors[i].color).rgba + ' ' + parseFloat(value.colors[i].per).toFixed(1);
+                let color=this.getColorFormatFunc(value.colors[i].color)[this.currentColorFormat]
+                value.colors[i].color=color;
+                gradient += color + ' ' + parseFloat(value.colors[i].per).toFixed(1);
                 if (value.colors[i].per != '') {
                     gradient += '%'
                 }
@@ -992,6 +1182,7 @@ dynamicLoadCss(csslist);
         destroy: function () {
             $(this.dom).remove();
             this.removeMouseDownEvent();
+            this.curcolordom.onclick=null;
         },
     }
     window.XNColorPicker = XNColorPicker;
