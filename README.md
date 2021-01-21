@@ -15,11 +15,8 @@
 
 
 # 选择器样式
-![avatar](https://raw.githubusercontent.com/fanaiai/xncolorpicker/main/1.png)
+![avatar](https://github.com/fanaiai/xncolorpicker/blob/main/4.png)
 
-![avatar](https://raw.githubusercontent.com/fanaiai/xncolorpicker/main/2.png)
-
-![avatar](https://raw.githubusercontent.com/fanaiai/xncolorpicker/main/3.png)
 
 # 使用步骤
 ## 下载代码
