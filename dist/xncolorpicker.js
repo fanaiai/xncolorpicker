@@ -870,6 +870,7 @@ dynamicLoadCss(csslist);
         },
         setCurrentGradientColor: function setCurrentGradientColor() {
             this.getColorFormat(this.gradientColor.arry.colors[this.gradientIndex].color);
+            this.fillPalette();
         },
         updateAngleBar: function updateAngleBar() {
             $(this.dom).find('.current-angle span').html(this.gradientColor.arry.angle + '°');
