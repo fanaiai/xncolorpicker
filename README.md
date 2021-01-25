@@ -22,7 +22,7 @@
 ## 下载代码
 ## 将src目录放置您的项目中
 ## 引用js文件，例如：
-    <script src="xncolorpicker.js"></script>
+    <script src="./dist/xncolorpicker.js"></script>
     
 ## 初始化选择器
     var xncolorpicker = new XNColorPicker({
