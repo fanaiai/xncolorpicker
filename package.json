@@ -34,8 +34,8 @@
   "keywords": [
     "颜色选择器"
   ],
-  "author": "范媛媛",
-  "license": "ISC",
+  "author": "范媛媛 <516039800@qq.com>",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/fanaiai/xncolorpicker/issues"
   },
