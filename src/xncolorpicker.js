@@ -1,11 +1,13 @@
 //! XNColorPicker.js
 //！ 仙女颜色选择器
 //! https://github.com/fanaiai/xncolorpicker
-//! version : 1.0.1
+//! version : 1.2.0
 //! authors : 范媛媛
 //! create date:2019/05/14
 //! update date:2021/01/06 v1.0.0发布
 //! update date:2021/01/06 v1.1.0发布
+//! update date:2021/01/27 v1.2.0发布
+//! v1.2.0 剔除jquery
 function dynamicLoadJs(urllist) {
     for (let i = 0; i < urllist.length; i++) {
 
