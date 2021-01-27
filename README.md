@@ -25,6 +25,9 @@
 # 选择器样式
 ![avatar](https://github.com/fanaiai/xncolorpicker/blob/main/4.png)
 
+# 试用
++ 下载代码
++ 打开文件test.html即可
 
 # 使用步骤
 ## 下载代码

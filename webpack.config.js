@@ -1,7 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
     mode:'development',
@@ -10,12 +12,16 @@ module.exports = {
             import:'./src/xncolorpicker.js',
         }
     },
-    devtool:'eval-source-map',//追踪错误源码
+    devtool:'source-map',//追踪错误源码
     devServer: {
         contentBase: './dist',
     },
     plugins: [
         new CleanWebpackPlugin({cleanStaleWebpackAssets:false}),
+        // new MiniCssExtractPlugin({
+        //     filename: '[name].css',
+        //     chunkFilename: '[id].css',
+        // }),
         new HtmlWebpackPlugin({
             template: './index.html',
         }),
@@ -42,21 +48,30 @@ module.exports = {
             module: false,
         }
     },
-    // optimization: {
-    //     moduleIds: 'deterministic',
-    //     runtimeChunk: 'single',
-    //     splitChunks: {
-    //         cacheGroups: {
-    //             vendor: {
-    //                 test: /[\\/]node_modules[\\/]/,
-    //                 name: 'vendors',
-    //                 chunks: 'all',
-    //             },
-    //         },
-    //     },
-    // },
+    optimization: {
+        minimizer: [
+            // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
+            // `...`,
+            // new CssMinimizerPlugin(),
+        ],
+        // moduleIds: 'deterministic',
+        // runtimeChunk: 'single',
+        // splitChunks: {
+        //     cacheGroups: {
+        //         vendor: {
+        //             test: /[\\/]node_modules[\\/]/,
+        //             name: 'vendors',
+        //             chunks: 'all',
+        //         },
+        //     },
+        // },
+    },
     module: {
         rules: [
+            // {
+            //     test: /\.css$/,
+            //     use: [MiniCssExtractPlugin.loader, 'css-loader'],
+            // },
             {
                 test: /\.js$/,
                 loader: "babel-loader",
