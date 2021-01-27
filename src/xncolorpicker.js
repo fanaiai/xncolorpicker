@@ -39,10 +39,11 @@ var jslist = [csspath + "/jquery.min.js", csspath + "/colorFormat.min.js"]
 // dynamicLoadJs(jslist);
 var csslist = ["//at.alicdn.com/t/font_2330183_hjqs7adohe.css"]
 dynamicLoadCss(csslist);
-import $ from './jquery.min.js'
+// import $ from './jquery.min.js'
+import './xnquery.js'
 import colorFormat from './colorFormat.min.js'
 import './xncolorpicker.css'
-(function (window) {
+(function (window,$) {
     // var that;
     var option = {
         color:'#ffffff',//初始颜色
@@ -301,7 +302,7 @@ import './xncolorpicker.css'
             }
             var wwidth = document.documentElement.clientWidth;
             var wheight = document.documentElement.clientHeight;
-            var curcolordom = this.$el[0].querySelector("div")
+            var curcolordom = this.$el.get(0).querySelector("div")
             var top = curcolordom.getBoundingClientRect().top;
             var left = curcolordom.getBoundingClientRect().left;
             var domwidth = $(this.dom).outerWidth();
@@ -452,17 +453,17 @@ import './xncolorpicker.css'
             that.dom.addEventListener("mousedown", (e) => {
                 var $t = $(e.target);
                 t = null;
-                if ($t.parents(".lightness").length > 0) {
+                if ($t.parents(".lightness").length() > 0) {
                     t = 'lightness';
                 }
-                if ($t.parents(".hue").length > 0) {
+                if ($t.parents(".hue").length() > 0) {
                     t = 'hue';
                     var changeY = e.offsetY * 100 / that.canvasSize.height;
                     that.huebar.style.top = changeY.toFixed(2) + '%';
                     startpos.bartop = parseFloat(that.huebar.style.top);
 
                 }
-                if ($t.parents(".opacity").length > 0) {
+                if ($t.parents(".opacity").length() > 0) {
                     t = 'opacity';
                     var changeY = (e.offsetY * 100 / that.canvasSize.height);
                     that.opacitybar.style.top = changeY.toFixed(2) + '%';
@@ -475,12 +476,13 @@ import './xncolorpicker.css'
                     // var confirmcolor=that.getCurrentColor()
                     // that.option.onChange(confirmcolor);
                 }
-                if ($t.parents(".gradient-item")[0]) {
+                if ($t.parents(".gradient-item").get(0)) {
                     $t = $t.parents('.gradient-item')
                 }
                 if ($t.hasClass("gradient-item")) {
                     startpos.isGradientBar = true;
                     this.gradientIndex = $t.index();
+                    console.log(this.gradientIndex)
                     this.updateGradientBar();
                     this.setCurrentGradientColor();
                     startpos.$ele = $t;
@@ -500,7 +502,7 @@ import './xncolorpicker.css'
                     startpos.isGradientBar = false;
                     startpos.isAngleBar = true;
                 }
-                if($t[0]==this.dom && this.option.canMove){
+                if($t.get(0)==this.dom && this.option.canMove){
                     startpos.isMove=true;
                 }
                 else{
@@ -511,7 +513,7 @@ import './xncolorpicker.css'
                 if (t) {
                     that.changeColor(t, e, startpos);
                 } else if (startpos.isGradientBar) {//如果移动渐变滑块
-                    var per = ((e.clientX - $(this.dom).find(".gradient-colors")[0].getBoundingClientRect().left) * 100 / $(this.dom).find(".gradient-colors")[0].getBoundingClientRect().width).toFixed(1);
+                    var per = ((e.clientX - $(this.dom).find(".gradient-colors").get(0).getBoundingClientRect().left) * 100 / $(this.dom).find(".gradient-colors").get(0).getBoundingClientRect().width).toFixed(1);
                     if (this.gradientColor.arry.colors.length < 3) {
                         if (per > 100) {
                             per = 100;
@@ -539,7 +541,7 @@ import './xncolorpicker.css'
                         startpos.$ele.removeClass("deleting-item")
                     }
                 } else if (startpos.isAngleBar) {
-                    var angle = ((e.clientX - $(this.dom).find(".gradient-angle")[0].getBoundingClientRect().left) * 360 / $(this.dom).find(".gradient-angle")[0].getBoundingClientRect().width).toFixed(1);
+                    var angle = ((e.clientX - $(this.dom).find(".gradient-angle").get(0).getBoundingClientRect().left) * 360 / $(this.dom).find(".gradient-angle").get(0).getBoundingClientRect().width).toFixed(1);
                     if (angle < 0) {
                         angle = 0
                     }
@@ -557,7 +559,7 @@ import './xncolorpicker.css'
             })
             document.addEventListener("mouseup", (e) => {
                 if (startpos.isGradientBar) {
-                    var per = ((e.clientX - $(this.dom).find(".gradient-colors")[0].getBoundingClientRect().left) * 100 / $(this.dom).find(".gradient-colors")[0].getBoundingClientRect().width).toFixed(1);
+                    var per = ((e.clientX - $(this.dom).find(".gradient-colors").get(0).getBoundingClientRect().left) * 100 / $(this.dom).find(".gradient-colors").get(0).getBoundingClientRect().width).toFixed(1);
                     if (this.gradientColor.arry.colors.length > 2) {
                         if (per > 105 || per < -5) {
                             this.gradientColor.arry.colors.splice(this.gradientIndex, 1);
@@ -657,12 +659,12 @@ import './xncolorpicker.css'
             })
             var mousedownFunc = (e) => {
                 e.stopPropagation();
-                if (that.dom && e.target != that.dom && $(e.target).parents(".fcolorpicker")[0] != that.dom && $(e.target)[0] != that.curcolordom) {
+                if (that.dom && e.target != that.dom && $(e.target).parents(".fcolorpicker").get(0) != that.dom && $(e.target).get(0) != that.curcolordom) {
                     if ($(that.dom).css('display') == 'block') {
                         that.cancleFun();
                     }
                 }
-                $(this.dom).find(".color-slidedown").not($(e.target).parents('.color-slidedown')[0]).removeClass('down')
+                $(this.dom).find(".color-slidedown").not($(e.target).parents('.color-slidedown').get(0)).removeClass('down')
             }
             this.removeMouseDownEvent = () => {
                 document.removeEventListener("mousedown", mousedownFunc)
@@ -951,14 +953,14 @@ import './xncolorpicker.css'
         },
         updateAngleBar() {
             $(this.dom).find('.current-angle span').html(this.gradientColor.arry.angle + '°')
-            $(this.dom).find('.current-angle .angle-bar').css('left', this.gradientColor.arry.angle / 3.6 + '%')
+            $(this.dom).find('.current-angle .angle-bar').css({'left': this.gradientColor.arry.angle / 3.6 + '%'})
         },
         updateGradientColorItem(index, color) {
-            $(this.dom).find('.gradient-item').eq(index).find('.color').css("background", color)
+            $(this.dom).find('.gradient-item').eq(index).find('.color').css({"background": color})
         },
         updateGradientBar() {
             var back = this.revertGradientToString(this.gradientColor.arry, true)
-            $(this.dom).find('.gradient-bar span').css("background", back.str)
+            $(this.dom).find('.gradient-bar span').css({"background":back.str})
             $(this.dom).find(".gradient-item").removeClass("on").eq(this.gradientIndex).addClass("on")
         },
         rendGradientColors() {
@@ -973,19 +975,19 @@ import './xncolorpicker.css'
             $(this.dom).find(".gradient-item").removeClass("on").eq(this.gradientIndex).addClass("on")
         },
         setColorTypeDom() {
-            if(!$(this.dom).find('.color-type')[0]){
+            if(!$(this.dom).find('.color-type').get(0)){
                 return;
             }
             $(this.dom).find('.color-type li').removeClass('on')
             $(this.dom).find('.color-type-item[data-type='+this.currentColorType+']').addClass('on')
             $(this.dom).find('.color-type').removeClass('down');
-            $(this.dom).find('.color-type .color-slidedown-curbox')[0].innerHTML=$(this.dom).find('.color-type-item[data-type='+this.currentColorType+']')[0].innerHTML;
+            $(this.dom).find('.color-type .color-slidedown-curbox').get(0).innerHTML=$(this.dom).find('.color-type-item[data-type='+this.currentColorType+']').get(0).innerHTML;
         },
         changeColorFormatType(){
             $(this.dom).find('.color-format-type li').removeClass('on')
             $(this.dom).find('.color-format-type-item[data-type='+this.currentColorFormat+']').addClass('on')
             $(this.dom).find('.color-format-type').removeClass('down');
-            $(this.dom).find('.color-format-type .color-slidedown-curbox')[0].innerHTML=$(this.dom).find('.color-format-type-item[data-type='+this.currentColorFormat+']')[0].innerHTML;
+            $(this.dom).find('.color-format-type .color-slidedown-curbox').get(0).innerHTML=$(this.dom).find('.color-format-type-item[data-type='+this.currentColorFormat+']').get(0).innerHTML;
             var confirmcolor=this.getCurrentColor(this.option.autoConfirm)
             this.rendInputValue();
             this.option.onChange(confirmcolor);
@@ -1190,4 +1192,4 @@ import './xncolorpicker.css'
         },
     }
     window.XNColorPicker = XNColorPicker;
-})(window)
+})(window,XNQuery)

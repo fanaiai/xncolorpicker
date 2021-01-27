@@ -10,15 +10,15 @@ module.exports = {
             import:'./src/xncolorpicker.js',
         }
     },
-    devtool:'inline-source-map',
+    devtool:'eval-source-map',//追踪错误源码
     devServer: {
         contentBase: './dist',
     },
     plugins: [
         new CleanWebpackPlugin({cleanStaleWebpackAssets:false}),
-        // new HtmlWebpackPlugin({
-        //     title: 'caching',
-        // }),
+        new HtmlWebpackPlugin({
+            template: './index.html',
+        }),
         new UglifyJsPlugin()
     ],
     output: {
