@@ -1,3 +1,12 @@
+# V1.1.1 2021/01/25
+## 待优化/开发功能点
++ 删除jquery
++ 增加修改option方法
+
+## 本次更新功能点
++ 修改webpack打包配置
+
+
 # V1.1.0 2021/01/21
 ## 更新功能点
 + 新增对渐变色的支持-径向渐变、线性渐变
@@ -15,17 +24,17 @@
 
 
 # 选择器样式
-![avatar](https://raw.githubusercontent.com/fanaiai/xncolorpicker/main/1.png)
+![avatar](https://github.com/fanaiai/xncolorpicker/blob/main/4.png)
 
-![avatar](https://raw.githubusercontent.com/fanaiai/xncolorpicker/main/2.png)
-
-![avatar](https://raw.githubusercontent.com/fanaiai/xncolorpicker/main/3.png)
 
 # 使用步骤
 ## 下载代码
 ## 将src目录放置您的项目中
 ## 引用js文件，例如：
-    <script src="xncolorpicker.js"></script>
+    <script src="./dist/xncolorpicker.min.js"></script>
+    
+    
+    
     
 ## 初始化选择器
     var xncolorpicker = new XNColorPicker({

@@ -36,9 +36,12 @@ var s = document.querySelector ? script.src : script.getAttribute("src", 4)//IE8
 // var s =currentlyAddingScript?currentlyAddingScript: document.currentScript.src;
 var csspath = s.substr(0, s.lastIndexOf('/') - 0);
 var jslist = [csspath + "/jquery.min.js", csspath + "/colorFormat.min.js"]
-dynamicLoadJs(jslist);
-var csslist = [csspath + "/xncolorpicker.css", "//at.alicdn.com/t/font_2330183_hjqs7adohe.css"]
+// dynamicLoadJs(jslist);
+var csslist = ["//at.alicdn.com/t/font_2330183_hjqs7adohe.css"]
 dynamicLoadCss(csslist);
+import $ from './jquery.min.js'
+import colorFormat from './colorFormat.min.js'
+import './xncolorpicker.css'
 (function (window) {
     // var that;
     var option = {
