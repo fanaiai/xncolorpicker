@@ -85,7 +85,7 @@ import './xncolorpicker.css'
                 "radial-gradient":"Radial",
             }
         }
-        this.option = $.extend(true, {}, option, options);
+        this.option = $.extend({}, option, options);
         // this.option.prevcolors=((this.option.prevcolors||option.prevcolors).split(','));
         if(!options.prevcolors){
             this.option.prevcolors=option.prevcolors;
@@ -482,7 +482,6 @@ import './xncolorpicker.css'
                 if ($t.hasClass("gradient-item")) {
                     startpos.isGradientBar = true;
                     this.gradientIndex = $t.index();
-                    console.log(this.gradientIndex)
                     this.updateGradientBar();
                     this.setCurrentGradientColor();
                     startpos.$ele = $t;
