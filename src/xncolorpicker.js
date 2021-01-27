@@ -8,18 +8,6 @@
 //! update date:2021/01/06 v1.1.0发布
 //! update date:2021/01/27 v1.2.0发布
 //! v1.2.0 剔除jquery
-function dynamicLoadJs(urllist) {
-    for (let i = 0; i < urllist.length; i++) {
-
-        let url = urllist[i];
-        var head = document.getElementsByTagName('head')[0];
-        var link = document.createElement('script');
-        link.src = url;
-        var finelurl = '<script type="text/javascript" src=' + url + '><\/script>'
-        document.write(finelurl)
-    }
-}
-
 function dynamicLoadCss(urllist) {
     for (let i = 0; i < urllist.length; i++) {
         let url = urllist[i];
@@ -35,13 +23,9 @@ function dynamicLoadCss(urllist) {
 var scripts = document.getElementsByTagName("script")
 var script = scripts[scripts.length - 1];
 var s = document.querySelector ? script.src : script.getAttribute("src", 4)//IE8直接.src
-// var s =currentlyAddingScript?currentlyAddingScript: document.currentScript.src;
 var csspath = s.substr(0, s.lastIndexOf('/') - 0);
-var jslist = [csspath + "/jquery.min.js", csspath + "/colorFormat.min.js"]
-// dynamicLoadJs(jslist);
 var csslist = ["//at.alicdn.com/t/font_2330183_hjqs7adohe.css"]
 dynamicLoadCss(csslist);
-// import $ from './jquery.min.js'
 import './xnquery.js'
 import colorFormat from './colorFormat.min.js'
 import './xncolorpicker.css'
