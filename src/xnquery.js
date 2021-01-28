@@ -1,8 +1,9 @@
 //! xnquery.js
 //! 仙女座js方法库，使用es6实现部分jquery方法
-//! version : 1.0.0
+//! version : 1.0.1
 //! authors : 范媛媛
 //! create date:2021/01/27 V1.0.0
+//! create date:2021/01/28 V1.0.1
 // https://github.com/fanaiai/xndatepicker
 (function (window) {
     function init(el) {
