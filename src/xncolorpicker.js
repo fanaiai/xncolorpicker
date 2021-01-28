@@ -71,6 +71,7 @@ import './xncolorpicker.css'
                 "radial-gradient":"Radial",
             }
         }
+        this.show=false;
         this.option = $.extend({}, option, options);
         // this.option.prevcolors=((this.option.prevcolors||option.prevcolors).split(','));
         if(!options.prevcolors){
@@ -123,10 +124,12 @@ import './xncolorpicker.css'
                     $(this.dom).empty();
                     $(this.dom).hide();
                     this.moved=false;
+                    this.show=false;
                 }
             } else {
                 this.init();
                 $(this.dom).show();
+                this.show=true;
             }
         },
         init: function () {
@@ -382,10 +385,8 @@ import './xncolorpicker.css'
             var that = this;
             this.dom.querySelector("input").onblur = (e) => {
                 // if (e.target.nodeName == 'input') {
-                that.initColorFormat(that.dom.querySelector(".current-color-value input").value);
-                that.fillOpacity();
-                that.fillPalette();
-                that.addHistoryColors();
+                that.setColor(that.dom.querySelector(".current-color-value input").value)
+
                 // }
             }
         },
@@ -779,6 +780,9 @@ import './xncolorpicker.css'
             }
         },
         rendInputValue() {
+            if(!this.dom.querySelector(".current-color")){
+                return;
+            }
             if (this.currentColorType != 'single') {
                 this.dom.querySelector(".current-color").style.background = this.gradientColor.str;
                 this.dom.querySelector(".current-color-value input").value = this.gradientColor.str;
@@ -856,6 +860,9 @@ import './xncolorpicker.css'
         },
         updatelightbar() {
             this.lightbar = this.dom.querySelector(".lightbar");
+            if(!this.lightbar){
+                return;
+            }
             var hsb = this.RGBToHSB({r: this.color.rgbav[0], g: this.color.rgbav[1], b: this.color.rgbav[2],})
             var x = hsb['s'] * this.canvasSize.width / 100;
             var y = (100 - hsb['b']) * this.canvasSize.height / 100;
@@ -895,8 +902,11 @@ import './xncolorpicker.css'
             return hsb;
         },
         setColor: function (color) {
-            this.option.color = color;
-            this.getColorFormat(color)
+            this.initColorFormat(color);
+            this.fillOpacity();
+            this.fillPalette();
+            this.addHistoryColors();
+            this.lastColor=color;
         },
         getColor: function (color) {
             return this.color;
@@ -1038,6 +1048,9 @@ import './xncolorpicker.css'
             }
             if (this.currentColorType == 'single') {
                 this.changeCurColorDom();
+                if(!this.show){
+                    return;
+                }
                 this.dom.querySelector(".current-color").style.background = this.color.rgba;
                 this.dom.querySelector(".current-color-value input").value = this.color[this.currentColorFormat];
             }

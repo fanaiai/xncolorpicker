@@ -21,7 +21,7 @@
 
 
 <div>
-    <p>全功能 <a id="destroy">销毁</a></p>
+    <p>全功能 <a id="destroy">销毁</a> <a id="setcolor">设置颜色</a></p>
     <div id="colorpicker"></div>
 </div>
 <div>
@@ -172,5 +172,6 @@
         }
     })
     document.querySelector("#destroy").onclick=function(){xncolorpicker.destroy();}
+    document.querySelector("#setcolor").onclick=function(){xncolorpicker.setColor('#ffff00');}
 </script>
 </html>
