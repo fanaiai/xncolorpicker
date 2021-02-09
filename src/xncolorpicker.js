@@ -1,13 +1,14 @@
 //! XNColorPicker.js
 //！ 仙女颜色选择器
 //! https://github.com/fanaiai/xncolorpicker
-//! version : 1.2.0
+//! version : 1.2.1
 //! authors : 范媛媛
 //! create date:2019/05/14
 //! update date:2021/01/06 v1.0.0发布
 //! update date:2021/01/06 v1.1.0发布
 //! update date:2021/01/27 v1.2.0发布
-//! v1.2.0 剔除jquery
+//! update date:2021/02/09 v1.2.1发布
+//! v1.2.1 剔除jquery
 function dynamicLoadCss(urllist) {
     for (let i = 0; i < urllist.length; i++) {
         let url = urllist[i];
@@ -29,10 +30,11 @@ dynamicLoadCss(csslist);
 import './xnquery.js'
 import colorFormat from './colorFormat.min.js'
 import './xncolorpicker.css'
-(function (window,$) {
+
+(function (window, $) {
     // var that;
     var option = {
-        color:'#ffffff',//初始颜色
+        color: '#ffffff',//初始颜色
         selector: "",//选择器容器
         showprecolor: true,//显示预制颜色
         prevcolors: ["#EF534F", "#BA69C8", "#FFD54F", "#81C784", "#7FDEEA", "#90CAF9", "#F44436", "#AB47BC", "#FFC106", "#66BB6A", "#25C6DA", "#4EC3F7", "#E53934", "#9D27B0", "#FFA726", "#4CAF50", "#00ACC1", "#29B6F6", "#D32E30", "#8F24AA", "#FB8C01", "#378E3C", "#0097A7", "#02AAF4", "#C62928", "#7B1FA2", "#F57C02", "#2F7D31", "#00838F", "#029BE5", "#B71B1C", "#6A1B9A", "#EF6C00", "#34691D", "#006164", "#0388D1", "#980A0B", "#4A148C", "#E65100", "#1A5E20", "#004D41", "#01579B", "#00000000", "#FFFFFF", "#DBDBDB", "#979797", "#606060", "#000000"],//预制颜色
@@ -41,47 +43,45 @@ import './xncolorpicker.css'
         format: 'rgba',//rgba hex hsla,初始颜色类型
         showPalette: true,//显示色盘
         show: false, //初始化显示
-        alwaysShow:false,//选择器是否一直显示
+        alwaysShow: false,//选择器是否一直显示
         lang: 'cn',// 中英文 cn en
-        colorTypeOption:'single,linear-gradient,radial-gradient',//颜色选择器可选类型
-        canMove:true,//默认为true
-        autoConfirm:false,//改变颜色，自动确定
+        colorTypeOption: 'single,linear-gradient,radial-gradient',//颜色选择器可选类型
+        canMove: true,//默认为true
+        autoConfirm: false,//改变颜色，自动确定
     }
 
     function XNColorPicker(options) {
-        // that = this;
-        this.pos={
-            left:0,top:0
+        this.pos = {
+            left: 0, top: 0
         }
-        this.moved=false;
+        this.moved = false;
         this.id = this.getRandomString();
         this.btns = {
             "cn": ["取消", "确定"],
             "en": ["Cancel", "OK"],
         }
-        this.colorTypeList={
-            "cn":{
-                "single":"纯色",
-                "linear-gradient":"线性渐变",
-                "radial-gradient":"径向渐变",
+        this.colorTypeList = {
+            "cn": {
+                "single": "纯色",
+                "linear-gradient": "线性渐变",
+                "radial-gradient": "径向渐变",
             },
-            "en":{
-                "single":"Solid",
-                "linear-gradient":"Linear",
-                "radial-gradient":"Radial",
+            "en": {
+                "single": "Solid",
+                "linear-gradient": "Linear",
+                "radial-gradient": "Radial",
             }
         }
-        this.show=false;
+        this.show = false;
         this.option = $.extend({}, option, options);
         // this.option.prevcolors=((this.option.prevcolors||option.prevcolors).split(','));
-        if(!options.prevcolors){
-            this.option.prevcolors=option.prevcolors;
+        if (!options.prevcolors) {
+            this.option.prevcolors = option.prevcolors;
+        } else {
+            this.option.prevcolors = options.prevcolors;
         }
-        else{
-            this.option.prevcolors=options.prevcolors;
-        }
-        this.option.colorTypeOption=this.option.colorTypeOption?this.option.colorTypeOption.split(','):['single','linear-gradient', 'radial-gradient']
-        this.currentColorFormat=this.option.format;
+        this.option.colorTypeOption = this.option.colorTypeOption ? this.option.colorTypeOption.split(',') : ['single', 'linear-gradient', 'radial-gradient']
+        this.currentColorFormat = this.option.format;
         if (typeof this.option.selector == 'string') {
             this.$el = $(this.option.selector);
         } else {
@@ -89,7 +89,7 @@ import './xncolorpicker.css'
         }
         this.lastColor = this.option.color;//上一次的颜色值
         this.initCurrentColorBox();
-
+        this.addPosEvent();
     }
 
     XNColorPicker.prototype = {
@@ -110,26 +110,28 @@ import './xncolorpicker.css'
             this.curcolordom.classList.add("fcolorpicker-curbox");
             this.curcolordom.style.background = this.option.color;
             this.$el.empty().append(this.curcolordom);
-            that.init();
             this.curcolordom.onclick = function (e) {
                 that.changeShow();
             }
             if (this.option.show) {
+                that.init();
                 $(that.dom).show();
             }
         },
         changeShow(hide) {
-            if ($(this.dom) && $(this.dom).css('display') == 'block' || hide) {
-                if(!this.option.alwaysShow){
-                    $(this.dom).empty();
-                    $(this.dom).hide();
-                    this.moved=false;
-                    this.show=false;
+            if (this.dom && $(this.dom).css('display') == 'block' || hide) {
+                if (!this.option.alwaysShow) {
+                    $(this.dom).remove();
+                    // $(this.dom).hide();
+                    this.dom = null;
+                    this.moved = false;
+                    this.show = false;
                 }
             } else {
                 this.init();
                 $(this.dom).show();
-                this.show=true;
+                this.show = true;
+                this.setPosition()
             }
         },
         init: function () {
@@ -145,12 +147,8 @@ import './xncolorpicker.css'
             this.setPrevColors();
             this.getHistoryColors();
             this.setPosition();
-            this.addPosEvent();
-            this.changeColorFormatType();
+            this.changeColorFormatType(true);
             $(this.dom).hide();
-        },
-        rendGradientDom() {
-
         },
         initDom: function () {
             // var dom = document.createElement("div");
@@ -159,16 +157,16 @@ import './xncolorpicker.css'
             if (!container) {
                 container = document.createElement('div')
                 container.classList.add('fcolorpicker')
-                if(this.option.canMove){
+                if (this.option.canMove) {
                     container.classList.add('canmove')
                 }
                 container.id = this.id;
                 reRend = false;
             }
-            var colortypehtml=''
-            for (let i=0;i<this.option.colorTypeOption.length;i++){
-                var type=this.option.colorTypeOption[i];
-                colortypehtml+=`<li class="color-type-item" data-type="${type}">${this.colorTypeList[this.option.lang][type]}</li>`
+            var colortypehtml = ''
+            for (let i = 0; i < this.option.colorTypeOption.length; i++) {
+                var type = this.option.colorTypeOption[i];
+                colortypehtml += `<li class="color-type-item" data-type="${type}">${this.colorTypeList[this.option.lang][type]}</li>`
             }
             var html =
                 `
@@ -257,7 +255,7 @@ import './xncolorpicker.css'
             if (!this.option.showhistorycolor) {
                 $(this.dom).find(".color-latest").hide();
             }
-            if(this.option.colorTypeOption.length<2){
+            if (this.option.colorTypeOption.length < 2) {
                 $(this.dom).find(".color-type").remove();
             }
             this.setPosition()
@@ -275,18 +273,18 @@ import './xncolorpicker.css'
                 that.setPosition();
             })
         },
-        moveDom(startpos,e){
+        moveDom(startpos, e) {
             if (!this.dom) {
                 return;
             }
-            this.moved=true;
-            var newleft=e.clientX-startpos.x+this.pos.left;
-            var newtop=e.clientY-startpos.y+this.pos.top;
+            this.moved = true;
+            var newleft = e.clientX - startpos.x + this.pos.left;
+            var newtop = e.clientY - startpos.y + this.pos.top;
             this.dom.style.top = newtop + "px";
             this.dom.style.left = newleft + "px";
         },
         setPosition: function () {
-            if (!this.dom || this.moved) {
+            if (!this.dom || this.moved || !this.show) {
                 return;
             }
             var wwidth = document.documentElement.clientWidth;
@@ -311,13 +309,16 @@ import './xncolorpicker.css'
             }
             this.dom.style.top = top + "px";
             this.dom.style.left = left + "px";
-            this.pos={
-                left:left,
-                top:top
+            this.pos = {
+                left: left,
+                top: top
             }
         },
         addHistoryColors: function () {
-            var currentColor=this.color[this.currentColorFormat];
+            var currentColor = this.color[this.currentColorFormat];
+            if(!this.hiscolors){
+                this.hiscolors=[];
+            }
             // if(this.currentColorType!='single'){
             //     currentColor=this.gradientColor.str;
             // }
@@ -327,13 +328,13 @@ import './xncolorpicker.css'
                     this.hiscolors.splice(i, 1);
                     break;
                 }
-            // }
-            //     else{
-            //         if(this.hiscolors[i]==currentColor){
-            //             this.hiscolors.splice(i, 1);
-            //             break;
-            //         }
-            //     }
+                // }
+                //     else{
+                //         if(this.hiscolors[i]==currentColor){
+                //             this.hiscolors.splice(i, 1);
+                //             break;
+                //         }
+                //     }
             }
             this.hiscolors.unshift(currentColor);
             window.localStorage.setItem("fcolorpicker", this.hiscolors.join(";"));
@@ -346,8 +347,8 @@ import './xncolorpicker.css'
             this.hiscolors = (hiscolors || "").split(";");
             this.rendHisColors();
         },
-        clearHistoryColors(){
-            this.hiscolors=[];
+        clearHistoryColors() {
+            this.hiscolors = [];
             window.localStorage.setItem("fcolorpicker", this.hiscolors.join(";"));
             this.rendHisColors();
             this.setPosition();
@@ -408,8 +409,8 @@ import './xncolorpicker.css'
             that.changeShow(true);
             return;
         },
-        getCurrentColor(isConfirm){
-            var that=this;
+        getCurrentColor(isConfirm) {
+            var that = this;
             that.initColorFormat(that.dom.querySelector(".current-color-value input").value, true)
             that.addHistoryColors();
             var confirmcolor = {
@@ -417,12 +418,14 @@ import './xncolorpicker.css'
             };
             if (this.currentColorType == 'single') {
                 confirmcolor.color = that.color;
-                if(isConfirm){
-                this.lastColor = this.color.rgba;}
+                if (isConfirm) {
+                    this.lastColor = this.color.rgba;
+                }
             } else {
                 confirmcolor.color = this.gradientColor;
-                if(isConfirm){
-                this.lastColor = this.gradientColor.str;}
+                if (isConfirm) {
+                    this.lastColor = this.gradientColor.str;
+                }
             }
             this.changeCurColorDom()
             return confirmcolor;
@@ -458,7 +461,7 @@ import './xncolorpicker.css'
                 }
                 startpos.x = e.clientX;
                 startpos.y = e.clientY;
-                if(t){
+                if (t) {
                     that.changeColor(t, e, null);
                     // var confirmcolor=that.getCurrentColor()
                     // that.option.onChange(confirmcolor);
@@ -488,11 +491,10 @@ import './xncolorpicker.css'
                     startpos.isGradientBar = false;
                     startpos.isAngleBar = true;
                 }
-                if($t.get(0)==this.dom && this.option.canMove){
-                    startpos.isMove=true;
-                }
-                else{
-                    startpos.isMove=false;
+                if ($t.get(0) == this.dom && this.option.canMove) {
+                    startpos.isMove = true;
+                } else {
+                    startpos.isMove = false;
                 }
             })
             document.addEventListener("mousemove", (e) => {
@@ -539,8 +541,8 @@ import './xncolorpicker.css'
                     this.updateGradientColors();
                     this.changeCurColorDom();
                 }
-                if(startpos.isMove){
-                    this.moveDom(startpos,e);
+                if (startpos.isMove) {
+                    this.moveDom(startpos, e);
                 }
             })
             document.addEventListener("mouseup", (e) => {
@@ -559,29 +561,29 @@ import './xncolorpicker.css'
                     } else {
 
                     }
-                    var confirmcolor=that.getCurrentColor(this.option.autoConfirm)
+                    var confirmcolor = that.getCurrentColor(this.option.autoConfirm)
                     that.option.onChange(confirmcolor);
-                    if(this.option.autoConfirm){
+                    if (this.option.autoConfirm) {
                         this.option.onConfirm(confirmcolor)
                     }
                 }
-                if(t || startpos.isAngleBar){
-                    var confirmcolor=that.getCurrentColor(this.option.autoConfirm)
+                if (t || startpos.isAngleBar) {
+                    var confirmcolor = that.getCurrentColor(this.option.autoConfirm)
                     that.option.onChange(confirmcolor);
-                    if(this.option.autoConfirm){
+                    if (this.option.autoConfirm) {
                         this.option.onConfirm(confirmcolor)
                     }
                 }
                 t = null;
                 startpos.isGradientBar = false;
                 startpos.isAngleBar = false;
-                if(startpos.isMove){
-                    var newleft=e.clientX-startpos.x+this.pos.left;
-                    var newtop=e.clientY-startpos.y+this.pos.top;
-                    this.pos.left=newleft;
-                    this.pos.top=newtop;
+                if (startpos.isMove) {
+                    var newleft = e.clientX - startpos.x + this.pos.left;
+                    var newtop = e.clientY - startpos.y + this.pos.top;
+                    this.pos.left = newleft;
+                    this.pos.top = newtop;
                 }
-                startpos.isMove=false;
+                startpos.isMove = false;
             })
             this.dom.addEventListener("click", (e) => {
                 e.stopPropagation();
@@ -595,9 +597,9 @@ import './xncolorpicker.css'
                         this.updateGradientColors();
                         this.changeCurColorDom();
                     }
-                    var confirmcolor=that.getCurrentColor(this.option.autoConfirm)
+                    var confirmcolor = that.getCurrentColor(this.option.autoConfirm)
                     that.option.onChange(confirmcolor);
-                    if(this.option.autoConfirm){
+                    if (this.option.autoConfirm) {
                         this.option.onConfirm(confirmcolor)
                     }
                     return;
@@ -606,39 +608,36 @@ import './xncolorpicker.css'
                     this.cancleFun();
                 }
                 if ($t.hasClass("confirm-color")) {
-                    var confirmcolor=that.getCurrentColor(true);
+                    var confirmcolor = that.getCurrentColor(true);
                     that.option.onConfirm(confirmcolor);
                     that.changeShow(true);
                     return;
                 }
-                if($t.hasClass('color-slidedown-curbox')){
-                    $t=$t.parent()
+                if ($t.hasClass('color-slidedown-curbox')) {
+                    $t = $t.parent()
                 }
-                if($t.hasClass('color-slidedown')){
-                    if($t.hasClass('down')){
+                if ($t.hasClass('color-slidedown')) {
+                    if ($t.hasClass('down')) {
                         $t.removeClass('down')
-                    }
-                    else{
+                    } else {
                         $t.addClass('down')
                     }
                 }
                 if ($t.hasClass('color-type-item')) {
-                    if(!$t.hasClass("on")) {
+                    if (!$t.hasClass("on")) {
                         var type = $t.attr('data-type');
                         this.currentColorType = type;
                         this.changeColorType();
-                    }
-                    else{
+                    } else {
                         $t.parents('.color-slidedown').removeClass('down')
                     }
                 }
                 if ($t.hasClass('color-format-type-item')) {
-                    if(!$t.hasClass("on")){
+                    if (!$t.hasClass("on")) {
                         var type = $t.attr('data-type');
                         this.currentColorFormat = type;
                         this.changeColorFormatType();
-                    }
-                    else{
+                    } else {
                         $t.parents('.color-slidedown').removeClass('down')
                     }
                 }
@@ -780,7 +779,7 @@ import './xncolorpicker.css'
             }
         },
         rendInputValue() {
-            if(!this.dom.querySelector(".current-color")){
+            if (!this.dom || !this.dom.querySelector(".current-color")) {
                 return;
             }
             if (this.currentColorType != 'single') {
@@ -818,7 +817,7 @@ import './xncolorpicker.css'
             this.fillOpacity();
         },
         fillOpacity: function () {
-            if(!this.ctxopacity){
+            if (!this.ctxopacity) {
                 return;
             }
             this.ctxopacity.clearRect(0, 0, 10, this.canvasSize.height)
@@ -839,7 +838,7 @@ import './xncolorpicker.css'
 
         },
         fillPalette() {
-            if(!this.ctxlightness){
+            if (!this.ctxlightness) {
                 return;
             }
             this.ctxlightness.fillStyle = "hsla(" + this.color.hslav[0] + ",100%,50%,1)";
@@ -860,7 +859,7 @@ import './xncolorpicker.css'
         },
         updatelightbar() {
             this.lightbar = this.dom.querySelector(".lightbar");
-            if(!this.lightbar){
+            if (!this.lightbar) {
                 return;
             }
             var hsb = this.RGBToHSB({r: this.color.rgbav[0], g: this.color.rgbav[1], b: this.color.rgbav[2],})
@@ -906,7 +905,7 @@ import './xncolorpicker.css'
             this.fillOpacity();
             this.fillPalette();
             this.addHistoryColors();
-            this.lastColor=color;
+            this.lastColor = color;
         },
         getColor: function (color) {
             return this.color;
@@ -955,7 +954,7 @@ import './xncolorpicker.css'
         },
         updateGradientBar() {
             var back = this.revertGradientToString(this.gradientColor.arry, true)
-            $(this.dom).find('.gradient-bar span').css({"background":back.str})
+            $(this.dom).find('.gradient-bar span').css({"background": back.str})
             $(this.dom).find(".gradient-item").removeClass("on").eq(this.gradientIndex).addClass("on")
         },
         rendGradientColors() {
@@ -970,35 +969,37 @@ import './xncolorpicker.css'
             $(this.dom).find(".gradient-item").removeClass("on").eq(this.gradientIndex).addClass("on")
         },
         setColorTypeDom() {
-            if(!$(this.dom).find('.color-type').get(0)){
+            if (!$(this.dom).find('.color-type').get(0)) {
                 return;
             }
             $(this.dom).find('.color-type li').removeClass('on')
-            $(this.dom).find('.color-type-item[data-type='+this.currentColorType+']').addClass('on')
+            $(this.dom).find('.color-type-item[data-type=' + this.currentColorType + ']').addClass('on')
             $(this.dom).find('.color-type').removeClass('down');
-            $(this.dom).find('.color-type .color-slidedown-curbox').get(0).innerHTML=$(this.dom).find('.color-type-item[data-type='+this.currentColorType+']').get(0).innerHTML;
+            $(this.dom).find('.color-type .color-slidedown-curbox').get(0).innerHTML = $(this.dom).find('.color-type-item[data-type=' + this.currentColorType + ']').get(0).innerHTML;
         },
-        changeColorFormatType(){
+        changeColorFormatType(isinit) {
             $(this.dom).find('.color-format-type li').removeClass('on')
-            $(this.dom).find('.color-format-type-item[data-type='+this.currentColorFormat+']').addClass('on')
+            $(this.dom).find('.color-format-type-item[data-type=' + this.currentColorFormat + ']').addClass('on')
             $(this.dom).find('.color-format-type').removeClass('down');
-            $(this.dom).find('.color-format-type .color-slidedown-curbox').get(0).innerHTML=$(this.dom).find('.color-format-type-item[data-type='+this.currentColorFormat+']').get(0).innerHTML;
-            var confirmcolor=this.getCurrentColor(this.option.autoConfirm)
+            $(this.dom).find('.color-format-type .color-slidedown-curbox').get(0).innerHTML = $(this.dom).find('.color-format-type-item[data-type=' + this.currentColorFormat + ']').get(0).innerHTML;
+            var confirmcolor = this.getCurrentColor(this.option.autoConfirm)
             this.rendInputValue();
-            this.option.onChange(confirmcolor);
-            if(this.option.autoConfirm){
-                this.option.onConfirm(confirmcolor)
+            if (!isinit) {
+                this.option.onChange(confirmcolor);
+                if (this.option.autoConfirm) {
+                    this.option.onConfirm(confirmcolor)
+                }
             }
         },
         changeColorType(justInit) {
             this.gradientIndex = 0;
-            var mustChange=this.option.colorTypeOption.indexOf(this.currentColorType)<0;
-            if(mustChange){
-                this.currentColorType=this.option.colorTypeOption[0]
+            var mustChange = this.option.colorTypeOption.indexOf(this.currentColorType) < 0;
+            if (mustChange) {
+                this.currentColorType = this.option.colorTypeOption[0]
             }
             if (this.currentColorType == 'single') {
                 if (!justInit || mustChange) {
-                    this.getColorFormat(this.gradientColor?this.gradientColor.arry.colors[0].color:'#ffffff');
+                    this.getColorFormat(this.gradientColor ? this.gradientColor.arry.colors[0].color : '#ffffff');
                 }
                 $(this.dom).find('.color-gradient').hide();
             } else {
@@ -1010,7 +1011,7 @@ import './xncolorpicker.css'
                         this.initColorFormat({
                             type: this.currentColorType,
                             angle: 0,
-                            colors: [{per:0,color:this.color.rgba}, {per:100,color:'rgba(0,0,0,0)'}]
+                            colors: [{per: 0, color: this.color.rgba}, {per: 100, color: 'rgba(0,0,0,0)'}]
                         })
                     }
                 }
@@ -1048,7 +1049,7 @@ import './xncolorpicker.css'
             }
             if (this.currentColorType == 'single') {
                 this.changeCurColorDom();
-                if(!this.show){
+                if (!this.show) {
                     return;
                 }
                 this.dom.querySelector(".current-color").style.background = this.color.rgba;
@@ -1140,8 +1141,8 @@ import './xncolorpicker.css'
                 gradient += parseFloat(value.angle).toFixed(1) + 'deg,';
             }
             for (let i = 0; i < value.colors.length; i++) {
-                let color=this.getColorFormatFunc(value.colors[i].color)[this.currentColorFormat]
-                value.colors[i].color=color;
+                let color = this.getColorFormatFunc(value.colors[i].color)[this.currentColorFormat]
+                value.colors[i].color = color;
                 gradient += color + ' ' + parseFloat(value.colors[i].per).toFixed(1);
                 if (value.colors[i].per != '') {
                     gradient += '%'
@@ -1186,8 +1187,8 @@ import './xncolorpicker.css'
         destroy: function () {
             $(this.dom).remove();
             this.removeMouseDownEvent();
-            this.curcolordom.onclick=null;
+            this.curcolordom.onclick = null;
         },
     }
     window.XNColorPicker = XNColorPicker;
-})(window,XNQuery)
+})(window, XNQuery)

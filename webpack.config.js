@@ -13,6 +13,7 @@ module.exports = {
         }
     },
     devtool:'source-map',//追踪错误源码
+    // devtool:'eval-source-map',//追踪错误源码
     devServer: {
         contentBase: './dist',
     },
