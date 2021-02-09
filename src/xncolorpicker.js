@@ -858,6 +858,9 @@ import './xncolorpicker.css'
             this.updatelightbar();
         },
         updatelightbar() {
+            if(!this.dom){
+                return;
+            }
             this.lightbar = this.dom.querySelector(".lightbar");
             if (!this.lightbar) {
                 return;
@@ -905,6 +908,7 @@ import './xncolorpicker.css'
             this.fillOpacity();
             this.fillPalette();
             this.addHistoryColors();
+            this.changeCurColorDom();
             this.lastColor = color;
         },
         getColor: function (color) {
