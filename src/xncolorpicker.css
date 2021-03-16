@@ -24,7 +24,7 @@
 .fcolorpicker .fcolor-list{
     display: flex;
     flex-wrap: wrap;
-    border-bottom: 1px solid #ddd;
+    /*border-bottom: 1px solid #ddd;*/
     margin-left: 2px;
     padding: 4px 0;
     padding-bottom: 0;

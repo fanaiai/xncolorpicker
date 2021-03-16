@@ -21,8 +21,20 @@
 
 
 <div>
-    <p>全功能 <a id="destroy">销毁</a> <a id="setcolor">设置颜色</a></p>
+    <p>全功能 <a id="destroy">销毁</a> <a id="setcolor">设置颜色</a> <a id="getcolor">获取当前颜色</a></p>
     <div id="colorpicker"></div>
+</div>
+<div>
+    <p>不显示输入框-2021/03/16 v1.2.2</p>
+    <div id="noinputter"></div>
+</div>
+<div>
+    <p>不显示按钮-2021/03/16 v1.2.2</p>
+    <div id="nobtn"></div>
+</div>
+<div>
+    <p>只显示预置颜色-2021/03/16 v1.2.2</p>
+    <div id="justpre"></div>
 </div>
 <div>
     <p>不显示调色盘</p>
@@ -41,23 +53,64 @@
     <div id="notype"></div>
 </div>
 </body>
-<!--<script src="./dist/xncolorpicker.min.js"></script>-->
+<script src="./dist/xncolorpicker.min.js"></script>
 <script>
     var xncolorpicker = new XNColorPicker({
         color: "linear-gradient(0.0deg,hsla(279,63%,58%,1) 0.0,hsla(198,83%,53%,1) 100.0%)",
         selector: "#colorpicker",
         showprecolor: true,//显示预制颜色
         prevcolors: null,//预制颜色，不设置则默认
-        showhistorycolor: true,//显示历史
+        showhistorycolor: false,//显示历史
         historycolornum: 16,//历史条数
         format: 'hsla',//rgba hex hsla,初始颜色类型
-        showPalette:true,//显示色盘
+        showPalette:false,//显示色盘
         show:false, //初始化显示
         lang:'cn',// cn 、en
         colorTypeOption:'single,linear-gradient,radial-gradient',
         canMove:false,//选择器位置是否可以拖拽
         alwaysShow:false,
         autoConfirm:true,
+        hideInputer:false,
+        hideCancelButton:false,
+        hideConfirmButton:false,
+        onError: function (e) {
+
+        },
+        onCancel:function(color){
+            console.log("cancel",color)
+        },
+        onChange:function(color){
+            console.log("change",color)
+        },
+        onConfirm:function(color){
+            console.log("confirm",color)
+            // xncolorpicker.$getCurColor();
+        }
+    })
+
+    document.querySelector("#destroy").onclick=function(){xncolorpicker.destroy();}
+    document.querySelector("#setcolor").onclick=function(){xncolorpicker.setColor('#ffff00');}
+    document.querySelector("#getcolor").onclick=function(){
+        var color=xncolorpicker.$getCurColor();
+        alert(JSON.stringify(color))
+    }
+    var noinputter = new XNColorPicker({
+        color: "#008867",
+        selector: "#noinputter",
+        showprecolor: true,//显示预制颜色
+        prevcolors: null,//预制颜色，不设置则默认
+
+        historycolornum: 16,//历史条数
+        format: 'hsla',//rgba hex hsla,初始颜色类型
+        showPalette:false,//显示色盘
+        show:false, //初始化显示
+        lang:'cn',// cn 、en
+        colorTypeOption:'single,linear-gradient,radial-gradient',//
+
+        showhistorycolor: true,//show history colors
+        hideInputer:true,//hide input field
+
+
         onError: function (e) {
 
         },
@@ -71,6 +124,71 @@
             console.log("confirm",color)
         }
     })
+    var justpre = new XNColorPicker({
+        color: "#008867",
+        selector: "#justpre",
+        showprecolor: true,//显示预制颜色
+        prevcolors: null,//预制颜色，不设置则默认
+
+        historycolornum: 16,//历史条数
+        format: 'hsla',//rgba hex hsla,初始颜色类型
+        showPalette:false,//显示色盘
+        show:false, //初始化显示
+        lang:'cn',// cn 、en
+        colorTypeOption:'single,linear-gradient,radial-gradient',//
+
+        showhistorycolor: false,//show history colors
+        hideInputer:true,//hide input field
+        hideCancelButton:true,//hide Cancel Button
+        hideConfirmButton:true,//hide Confirm Button
+        autoConfirm:true,//If you hide Confirm button,please set autoConfirm to true
+
+
+        onError: function (e) {
+
+        },
+        onCancel:function(color){
+            console.log("cancel",color)
+        },
+        onChange:function(color){
+            console.log("change",color)
+        },
+        onConfirm:function(color){
+            console.log("confirm",color)
+        }
+    })
+    var nobtn = new XNColorPicker({
+        color: "#008867",
+        selector: "#nobtn",
+        showprecolor: true,//显示预制颜色
+        prevcolors: null,//预制颜色，不设置则默认
+        showhistorycolor: true,//显示历史
+        historycolornum: 16,//历史条数
+        format: 'hsla',//rgba hex hsla,初始颜色类型
+        showPalette:false,//显示色盘
+        show:false, //初始化显示
+        lang:'cn',// cn 、en
+        colorTypeOption:'single,linear-gradient,radial-gradient',//
+
+        hideCancelButton:true,
+        hideConfirmButton:true,
+        autoConfirm:true,//不显示确定按钮时，请设置autoconfirm
+
+        onError: function (e) {
+
+        },
+        onCancel:function(color){
+            console.log("cancel",color)
+        },
+        onChange:function(color){
+            console.log("change",color)
+        },
+        onConfirm:function(color){
+            console.log("confirm",color)
+        }
+    })
+
+
     var nopallete = new XNColorPicker({
         color: "#008867",
         selector: "#nopallete",
@@ -171,7 +289,6 @@
             console.log("confirm",color)
         }
     })
-    document.querySelector("#destroy").onclick=function(){xncolorpicker.destroy();}
-    document.querySelector("#setcolor").onclick=function(){xncolorpicker.setColor('#ffff00');}
+
 </script>
 </html>

@@ -1,0 +1,37 @@
+@font-face {font-family: "iconfontcolorpicker";
+  src: url('iconfont.eot?t=1615901745654'); /* IE9 */
+  src: url('iconfont.eot?t=1615901745654#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAN8AAsAAAAACCgAAAMvAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDQAqCLIIBATYCJAMYCw4ABCAFhXEHSxsmB8gusG3Y09KYFrM1G+NuvlM/i6r3HLF4eNrv27kz8+abb1xMS9JkpnErCVqgRLpHsUYj8f/vr+4bWIlMbH8itHbaNJuY4Q4msFFJEYp7Ns7WWuZL7DFCPckCod7uZfFocikbS07UybJRr5MLDoEdpNASTQOSSLKkLdiAM09tsub1g2Omq7IBnw3nFNlUgVmAowQeSFR+iLw/yLeo/DB2QUvcTqBrmRnatXVwAQMKs18g7nqrYCDjVBTmbwu1YmoRb4ConV7h3gF4Hbx//AFnUEiazBx68PpmAivf4R3dK2Wh4CGANZ0ebBYZ24FCPK303NctGBWvu3qPHUBXW5K+w5v/tL8TOk+CM7apD10L2f+XR9YokiAqSNcHe3kbvotDI/PdmFUih3IFihLSSPwA+5GkdcIuHewBzjMp673JELIsZnhUaxkz8A9ePj4uOv7WpVHhsev3LZQEF3y0Q6WxiYGR2lRydXH53Mcho7d7ijq375lsHqpb8wfem130PIh+7qa+K6dH1f9xfHMUe3kd4lg8eNlX94MkfgmTOz8N1hFQBiFS2nqGYZNT0zNJ7P8DQjNHDYw/nvhAl2u7nMuB/71pPjlvx0InuzwEuim3Ugfy165NAPJWXAKA9A83/i0f4++xUskO/2mvgC/16MBR/yXIKwDvVqQz6yewOpYUjWOqalEyOxMFqtXwIBk1Xbx869TrVNLFHfnCjDCBpGUzZDM2ZMFGoNFzDKqZKujapnd2z8w8vCgdbLUBIGz0BMkwArKNwUYWrAcaS5Hn1ypsN3Qdjwlkb4nfoXUmJZTgzSN6XeTG1shQ+I10kRZceh2Jz8jepoors+V5V1hWedgMW1Z7g3+bcuLlRlR3ti1i0HCR4RYgUDobSy4Caak7kXKuYWuoeqW6LjIYshMjiiAJVOMRaqYVcsarLoYKjExkqsDK6r9ERNgZYt1KKdy9AB2EV56x4mF7IAcr+zDktjCPMh5x1V53rLY+wkANWCGD4gSkkhSJjOpOAdFEXdMAV2mOzarU0FVY34Y4+08t0GW+YI0UOUo0UaOleelVqgb6ncqj8q3eWkc6djkcyAEAAA==') format('woff2'),
+  url('iconfont.woff?t=1615901745654') format('woff'),
+  url('iconfont.ttf?t=1615901745654') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('iconfont.svg?t=1615901745654#iconfontcolorpicker') format('svg'); /* iOS 4.1- */
+}
+
+.iconfontcolorpicker {
+  font-family: "iconfontcolorpicker" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.iconcolorpickerxiala:before {
+  content: "\e704";
+}
+
+.iconcolorpickerzhankai1:before {
+  content: "\e66d";
+}
+
+.iconcolorpickercheck:before {
+  content: "\e600";
+}
+
+.iconcolorpicker11:before {
+  content: "\e625";
+}
+
+.iconcolorpicker1:before {
+  content: "\e624";
+}
+

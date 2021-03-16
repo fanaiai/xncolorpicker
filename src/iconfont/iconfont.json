@@ -1,0 +1,44 @@
+{
+  "id": "2330183",
+  "name": "仙女颜色选择器",
+  "font_family": "iconfontcolorpicker",
+  "css_prefix_text": "iconcolorpicker",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "11944888",
+      "name": "下  拉",
+      "font_class": "xiala",
+      "unicode": "e704",
+      "unicode_decimal": 59140
+    },
+    {
+      "icon_id": "1278128",
+      "name": "展开1",
+      "font_class": "zhankai1",
+      "unicode": "e66d",
+      "unicode_decimal": 58989
+    },
+    {
+      "icon_id": "12906662",
+      "name": "check",
+      "font_class": "check",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "19451040",
+      "name": "1",
+      "font_class": "11",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "19450997",
+      "name": "1",
+      "font_class": "1",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    }
+  ]
+}

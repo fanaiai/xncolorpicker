@@ -1,4 +1,13 @@
 # [样例地址](https://www.jq22.com/yanshi23671) (样例不是最新代码哦)
+
+# V1.2.2 2021/03/16
+## 本次更新功能点
++ 增加方法获取当前颜色 var color=xncolorpickerins.$getCurColor()
++ 去掉当autoconfirm设置为true时，change的回调
++ 增加配置项，hideInputer 隐藏输入框，hideCancelButton 隐藏取消按钮，hideConfirmButton隐藏确定按钮
++ iconfont放置本地，不再引用cdn
+
+
 # V1.2.1 2021/02/09
 ## 本次更新功能点
 + 选择器隐藏时删除dom元素

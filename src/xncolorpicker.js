@@ -8,28 +8,12 @@
 //! update date:2021/01/06 v1.1.0发布
 //! update date:2021/01/27 v1.2.0发布
 //! update date:2021/02/09 v1.2.1发布
+//! update date:2021/03/16 v1.2.2发布
 //! v1.2.1 剔除jquery
-function dynamicLoadCss(urllist) {
-    for (let i = 0; i < urllist.length; i++) {
-        let url = urllist[i];
-        var head = document.getElementsByTagName('head')[0];
-        var link = document.createElement('link');
-        link.type = 'text/css';
-        link.rel = 'stylesheet';
-        link.href = url;
-        head.appendChild(link);
-    }
-}
-
-var scripts = document.getElementsByTagName("script")
-var script = scripts[scripts.length - 1];
-var s = document.querySelector ? script.src : script.getAttribute("src", 4)//IE8直接.src
-var csspath = s.substr(0, s.lastIndexOf('/') - 0);
-var csslist = ["//at.alicdn.com/t/font_2330183_hjqs7adohe.css"]
-dynamicLoadCss(csslist);
 import './xnquery.js'
 import colorFormat from './colorFormat.min.js'
 import './xncolorpicker.css'
+import './iconfont/iconfont.css'
 
 (function (window, $) {
     // var that;
@@ -48,6 +32,10 @@ import './xncolorpicker.css'
         colorTypeOption: 'single,linear-gradient,radial-gradient',//颜色选择器可选类型
         canMove: true,//默认为true
         autoConfirm: false,//改变颜色，自动确定
+        hideInputer:false,//隐藏输入框
+        hideCancelButton:false,//隐藏取消按钮
+        hideConfirmButton:false,//隐藏确认按钮
+
     }
 
     function XNColorPicker(options) {
@@ -116,6 +104,9 @@ import './xncolorpicker.css'
             if (this.option.show) {
                 that.init();
                 $(that.dom).show();
+            }
+            else{
+                that.initColorFormat();
             }
         },
         changeShow(hide) {
@@ -258,6 +249,18 @@ import './xncolorpicker.css'
             if (this.option.colorTypeOption.length < 2) {
                 $(this.dom).find(".color-type").remove();
             }
+            if (this.option.hideInputer) {
+                $(this.dom).find(".color-preview").hide();
+            }
+            if (this.option.hideCancelButton) {
+                $(this.dom).find(".cancel-color").remove();
+            }
+            if (this.option.hideConfirmButton) {
+                $(this.dom).find(".confirm-color").remove();
+                if (this.option.hideCancelButton) {
+                    $(this.dom).find(".color-btn-group").remove();
+                }
+            }
             this.setPosition()
             if (!reRend) {
                 this.addEvent();
@@ -393,6 +396,7 @@ import './xncolorpicker.css'
         },
         cancleFun() {
             var that = this;
+            if(!that.option.autoConfirm){
             that.initColorFormat(this.lastColor, true)
             var confirmcolor = {
                 colorType: this.currentColorType
@@ -405,7 +409,7 @@ import './xncolorpicker.css'
                 this.lastColor = this.gradientColor.str;
             }
             this.changeCurColorDom()
-            that.option.onCancel(confirmcolor);
+            that.option.onCancel(confirmcolor);}
             that.changeShow(true);
             return;
         },
@@ -1193,6 +1197,15 @@ import './xncolorpicker.css'
             this.removeMouseDownEvent();
             this.curcolordom.onclick = null;
         },
+        $getCurColor(){
+            var color;
+            if (this.currentColorType == 'single') {
+                color= {type:'single',color:this.color};
+            } else {
+                color= {type:this.currentColorType,color:this.gradientColor};
+            }
+            return color
+        }
     }
     window.XNColorPicker = XNColorPicker;
 })(window, XNQuery)

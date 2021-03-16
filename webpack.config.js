@@ -99,14 +99,18 @@ module.exports = {
             //     }
             // },
             {
-                test: /\.(jpg|png|gif)$/i,  //i表示忽略图片格式大小写，例如.PNG
+                test: /\.(jpg|png|gif|svg)$/i,  //i表示忽略图片格式大小写，例如.PNG
                 use: [{
                     loader: 'url-loader',  // url-loader依赖于file-loader所以这两个包都需要下载
                     options:{
                         limit: 10*1024, //如果图片小于10k，就使用base64处理，
                     }
                 }]
-            }
+            },
+            {
+                test: /\.(woff|woff2|eot|ttf|otf)$/i,
+                type: 'asset/resource',
+            },
         ],
     },
 };
