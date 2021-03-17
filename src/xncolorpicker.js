@@ -1,7 +1,7 @@
 //! XNColorPicker.js
 //！ 仙女颜色选择器
 //! https://github.com/fanaiai/xncolorpicker
-//! version : 1.2.1
+//! version : 1.2.3
 //! authors : 范媛媛
 //! create date:2019/05/14
 //! update date:2021/01/06 v1.0.0发布
@@ -9,6 +9,7 @@
 //! update date:2021/01/27 v1.2.0发布
 //! update date:2021/02/09 v1.2.1发布
 //! update date:2021/03/16 v1.2.2发布
+//! update date:2021/03/17 v1.2.3发布
 //! v1.2.1 剔除jquery
 import './xnquery.js'
 import colorFormat from './colorFormat.min.js'
@@ -78,6 +79,7 @@ import './iconfont/iconfont.css'
         this.lastColor = this.option.color;//上一次的颜色值
         this.initCurrentColorBox();
         this.addPosEvent();
+
     }
 
     XNColorPicker.prototype = {
@@ -108,6 +110,8 @@ import './iconfont/iconfont.css'
             else{
                 that.initColorFormat();
             }
+            this.$el.get(0).colorpicker=this;
+            console.log(this.$el.get(0))
         },
         changeShow(hide) {
             if (this.dom && $(this.dom).css('display') == 'block' || hide) {

@@ -1,5 +1,16 @@
 # [样例地址](https://www.jq22.com/yanshi23671) (样例不是最新代码哦)
 
+# V1.2.3 2021/03/17
+## 本次更新功能点
++ colorpicker实例挂载到dom元素上
++ 如：获取页面所有选择器的当前颜色
+
+    
+    $(".colorpicker").each((i,e)=>{
+        var color=e.colorpicker.$getCurColor();
+        console.log(color)
+    })
+
 # V1.2.2 2021/03/16
 ## 本次更新功能点
 + 增加方法获取当前颜色 var color=xncolorpickerins.$getCurColor()
