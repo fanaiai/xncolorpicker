@@ -10,6 +10,7 @@
 //! update date:2021/02/09 v1.2.1发布
 //! update date:2021/03/16 v1.2.2发布
 //! update date:2021/03/17 v1.2.3发布
+//! update date:2021/03/29 v1.2.4发布
 //! v1.2.1 剔除jquery
 import './xnquery.js'
 import colorFormat from './colorFormat.min.js'
@@ -111,7 +112,7 @@ import './iconfont/iconfont.css'
                 that.initColorFormat();
             }
             this.$el.get(0).colorpicker=this;
-            console.log(this.$el.get(0))
+            // console.log(this.$el.get(0))
         },
         changeShow(hide) {
             if (this.dom && $(this.dom).css('display') == 'block' || hide) {
@@ -446,7 +447,8 @@ import './iconfont/iconfont.css'
                 left: 0,
                 bartop: 0,
                 isGradientBar: false,
-                $ele: null
+                $ele: null,
+                hasChange:false
             }
             that.dom.addEventListener("mousedown", (e) => {
                 var $t = $(e.target);
@@ -525,12 +527,14 @@ import './iconfont/iconfont.css'
                             per = 0;
                         }
                     }
+                    if(per != this.gradientColor.arry.colors[this.gradientIndex].per){
+                        startpos.hasChange=true;
+                    }
 
                     this.gradientColor.arry.colors[this.gradientIndex].per = per;
                     startpos.$ele.css({left: per + '%'})
                     this.updateGradientColors(true);
                     this.changeCurColorDom();
-
                     if (per < -5 || per > 105) {
                         startpos.$ele.addClass("deleting-item")
                     } else {
@@ -544,6 +548,9 @@ import './iconfont/iconfont.css'
                     if (angle > 360) {
                         angle = 360
                     }
+                    if(angle != this.gradientColor.arry.angle){
+                        startpos.hasChange=true;
+                    }
                     this.gradientColor.arry.angle = angle;
                     this.updateAngleBar();
                     this.updateGradientColors();
@@ -556,6 +563,7 @@ import './iconfont/iconfont.css'
             document.addEventListener("mouseup", (e) => {
                 if (startpos.isGradientBar) {
                     var per = ((e.clientX - $(this.dom).find(".gradient-colors").get(0).getBoundingClientRect().left) * 100 / $(this.dom).find(".gradient-colors").get(0).getBoundingClientRect().width).toFixed(1);
+
                     if (this.gradientColor.arry.colors.length > 2) {
                         if (per > 105 || per < -5) {
                             this.gradientColor.arry.colors.splice(this.gradientIndex, 1);
@@ -563,19 +571,18 @@ import './iconfont/iconfont.css'
                             this.updateGradientBar();
                             this.gradientColor = this.revertGradientToString(this.gradientColor.arry)
                             this.rendInputValue();
-
+                            startpos.hasChange=true;
                         }
 
-                    } else {
-
                     }
+                    if(startpos.hasChange){
                     var confirmcolor = that.getCurrentColor(this.option.autoConfirm)
                     that.option.onChange(confirmcolor);
                     if (this.option.autoConfirm) {
                         this.option.onConfirm(confirmcolor)
-                    }
+                    }}
                 }
-                if (t || startpos.isAngleBar) {
+                if ((t || startpos.isAngleBar) && startpos.hasChange) {
                     var confirmcolor = that.getCurrentColor(this.option.autoConfirm)
                     that.option.onChange(confirmcolor);
                     if (this.option.autoConfirm) {
@@ -592,6 +599,7 @@ import './iconfont/iconfont.css'
                     this.pos.top = newtop;
                 }
                 startpos.isMove = false;
+                startpos.hasChange=false;
             })
             this.dom.addEventListener("click", (e) => {
                 e.stopPropagation();
