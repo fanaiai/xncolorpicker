@@ -1,4 +1,10 @@
 # [样例地址](https://www.jq22.com/yanshi23671) (样例不是最新代码哦)
+
+# V1.2.5 2021/04/22
+## 本次更新功能点
++ 修复bug，给body设置color和font-size被继承
++ 增加颜色单词与色值的转换，共支持148个单词，数据来源 https://www.w3schools.cn/colors/colors_2019.asp
+
 # V1.2.3 2021/03/29
 ## 本次更新功能点
 + 修复bug，点击渐变色色块，不拖拽就触发change事件

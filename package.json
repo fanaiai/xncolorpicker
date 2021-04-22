@@ -1,6 +1,6 @@
 {
   "name": "xncolorpicker",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "仙女座颜色选择器",
   "dependencies": {
     "url-loader": "^4.1.1"

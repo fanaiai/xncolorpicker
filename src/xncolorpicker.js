@@ -11,14 +11,14 @@
 //! update date:2021/03/16 v1.2.2发布
 //! update date:2021/03/17 v1.2.3发布
 //! update date:2021/03/29 v1.2.4发布
+//! update date:2021/04/22 v1.2.5发布
 //! v1.2.1 剔除jquery
 import './xnquery.js'
 import colorFormat from './colorFormat.min.js'
 import './xncolorpicker.css'
 import './iconfont/iconfont.css'
-
+import {colorwords} from './xncolorwords'
 (function (window, $) {
-    // var that;
     var option = {
         color: '#ffffff',//初始颜色
         selector: "",//选择器容器
@@ -1086,7 +1086,7 @@ import './iconfont/iconfont.css'
         },
         getColorFormatFunc(color1) {
             if (color1.indexOf("rgb") < 0 && color1.indexOf("#") < 0 && color1.indexOf("hsl") < 0) {
-                color1 = 'rgba(0,0,0,0)'
+                color1 = colorwords[color1.toLowerCase()]||'rgba(0,0,0,0)'
             }
             var color = {
                 "rgba": colorFormat({color: color1, format: "rgba"}).complete,
