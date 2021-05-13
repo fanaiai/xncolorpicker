@@ -32,7 +32,7 @@ module.exports = {
     output: {
         filename: '[name].min.js',
         path: path.resolve(__dirname, 'dist'),
-        publicPath: '/',
+        publicPath: './',
         environment: {//输出es5的语法，用于兼容ie
             // The environment supports arrow functions ('() => { ... }').
             arrowFunction: false,
