@@ -58,7 +58,7 @@
 
 
 # 选择器样式
-![avatar](https://github.com/fanaiai/xncolorpicker/blob/main/4.png)
+![avatar](https://raw.githubusercontent.com/fanaiai/xncolorpicker/main/4.png)
 
 # 试用
 + 下载代码
