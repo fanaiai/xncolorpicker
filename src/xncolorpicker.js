@@ -1205,9 +1205,14 @@ import {colorwords} from './xncolorwords'
             document.body.removeChild(textArea);
         },
         destroy: function () {
-            $(this.dom).remove();
-            this.removeMouseDownEvent();
-            this.curcolordom.onclick = null;
+            try{
+                $(this.dom).remove();
+                this.removeMouseDownEvent();
+                this.curcolordom.onclick = null;
+            }
+            catch (e) {
+                
+            }
         },
         $getCurColor(){
             var color;
@@ -1221,3 +1226,4 @@ import {colorwords} from './xncolorwords'
     }
     window.XNColorPicker = XNColorPicker;
 })(window, XNQuery)
+
