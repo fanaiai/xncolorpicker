@@ -1207,11 +1207,13 @@ import {colorwords} from './xncolorwords'
         destroy: function () {
             try{
                 $(this.dom).remove();
-                this.removeMouseDownEvent();
+                if(this.removeMouseDownEvent){
+                    this.removeMouseDownEvent();
+                }
                 this.curcolordom.onclick = null;
             }
             catch (e) {
-                
+
             }
         },
         $getCurColor(){
