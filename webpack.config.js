@@ -15,7 +15,7 @@ module.exports = {
     devtool:'source-map',//追踪错误源码
     // devtool:'eval-source-map',//追踪错误源码
     devServer: {
-        port:8082,
+        port:8083,
         contentBase: './dist',
     },
     plugins: [
@@ -108,9 +108,18 @@ module.exports = {
                     }
                 }]
             },
-            {
-                test: /\.(woff|woff2|eot|ttf|otf)$/i,
-                type: 'asset/resource',
+            {//对字体图标的处理
+                test: /\.(ttf|woff2?)$/,
+                type: 'asset',
+                generator: {
+                    filename: 'iconfont/[name][ext]',
+                    // path:'iconfont/'
+                },
+                parser: {
+                    dataUrlCondition: {
+                        maxSize: 4 * 1024 // 4kb
+                    }
+                }
             },
         ],
     },
