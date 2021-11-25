@@ -92,7 +92,7 @@
     margin-top:6px;
 }
 .fcolorpicker .color-palette .lightness{
-    flex:0 0 212px;
+    flex:0 0 200px;
     height: 129px;
     margin-right: 8px;
     /*border:1px solid #ccc;*/
@@ -105,8 +105,8 @@
     cursor: pointer;
 }
 .fcolorpicker .color-palette .hue{
-    flex:0 0 6px;
-    margin-right: 8px;
+    flex:0 0 10px;
+    margin-right: 10px;
     /*border:1px solid #ccc;*/
     position: relative;
 }
@@ -116,7 +116,7 @@
     cursor: pointer;
 }
 .fcolorpicker .color-palette .opacity{
-    flex:0 0 6px;
+    flex:0 0 10px;
     /*border:1px solid #ccc;*/
     position: relative;
 }
@@ -142,7 +142,7 @@
 .fcolorpicker .color-palette .huebar,.color-palette .opacitybar{
     position: absolute;
     border-radius: 50%;
-    left: -4px;
+    left: -2px;
     box-shadow: 0 2px 7px -1px rgb(81 81 78);
     pointer-events: none;
     margin-top: -7px;
