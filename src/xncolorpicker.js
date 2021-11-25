@@ -12,6 +12,7 @@
 //! update date:2021/03/17 v1.2.3发布
 //! update date:2021/03/29 v1.2.4发布
 //! update date:2021/04/22 v1.2.5发布
+//! update date:2021/11/25 v1.2.6发布
 //! v1.2.1 剔除jquery
 import './xnquery.js'
 import colorFormat from './colorFormat.min.js'
@@ -421,7 +422,7 @@ import {colorwords} from './xncolorwords'
         getCurrentColor(isConfirm) {
             var that = this;
             that.initColorFormat(that.dom.querySelector(".current-color-value input").value, true)
-            that.addHistoryColors();
+            // that.addHistoryColors();
             var confirmcolor = {
                 colorType: this.currentColorType
             };
@@ -608,7 +609,7 @@ import {colorwords} from './xncolorwords'
                     that.getColorFormat($t.attr("data-color"));
                     that.fillOpacity();
                     that.fillPalette();
-                    that.addHistoryColors();
+                    // that.addHistoryColors();
                     if (this.currentColorType != 'single') {
                         this.updateGradientColors();
                         this.changeCurColorDom();
@@ -616,6 +617,7 @@ import {colorwords} from './xncolorwords'
                     var confirmcolor = that.getCurrentColor(this.option.autoConfirm)
                     that.option.onChange(confirmcolor);
                     if (this.option.autoConfirm) {
+                        that.addHistoryColors()
                         this.option.onConfirm(confirmcolor)
                     }
                     return;
@@ -626,6 +628,7 @@ import {colorwords} from './xncolorwords'
                 if ($t.hasClass("confirm-color")) {
                     var confirmcolor = that.getCurrentColor(true);
                     that.option.onConfirm(confirmcolor);
+                    that.addHistoryColors()
                     that.changeShow(true);
                     return;
                 }
@@ -1228,4 +1231,6 @@ import {colorwords} from './xncolorwords'
     }
     window.XNColorPicker = XNColorPicker;
 })(window, XNQuery)
+
+export default window.XNColorPicker
 

@@ -1,10 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+// const CopyWebpackPlugin = require('copy-webpack-plugin')
 module.exports = {
     mode:'development',
     entry: {
@@ -12,22 +10,33 @@ module.exports = {
             import:'./src/xncolorpicker.js',
         }
     },
-    devtool:'source-map',//追踪错误源码
     // devtool:'eval-source-map',//追踪错误源码
+    // devtool:'eval',//不追踪错误源码
     devServer: {
-        port:8083,
-        contentBase: './dist',
+        hot:true,
+        publicPath:'/'
+        // contentBase: './dist',
+        // host:'10.1.100.207',
+        // port:8000,
     },
     plugins: [
-        new CleanWebpackPlugin({cleanStaleWebpackAssets:false}),
-        // new MiniCssExtractPlugin({
-        //     filename: '[name].css',
-        //     chunkFilename: '[id].css',
-        // }),
+        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: './index.html',
+            // template: './test.html',
         }),
-        new UglifyJsPlugin()
+        new UglifyJsPlugin(),
+        // new CopyWebpackPlugin({//文件拷贝
+        //     patterns: [
+        //         {
+        //             from: 'src',
+        //             globOptions: {
+        //                 // ignore:['**/index.html'],//设置忽略,**代表from
+        //             },
+        //             to: 'public'
+        //         }
+        //     ]
+        // })
     ],
     output: {
         filename: '[name].min.js',
@@ -50,63 +59,38 @@ module.exports = {
             module: false,
         }
     },
-    optimization: {
-        minimizer: [
-            // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
-            // `...`,
-            // new CssMinimizerPlugin(),
-        ],
-        // moduleIds: 'deterministic',
-        // runtimeChunk: 'single',
-        // splitChunks: {
-        //     cacheGroups: {
-        //         vendor: {
-        //             test: /[\\/]node_modules[\\/]/,
-        //             name: 'vendors',
-        //             chunks: 'all',
-        //         },
-        //     },
-        // },
-    },
+    // optimization: {
+    //     moduleIds: 'deterministic',
+    //     runtimeChunk: 'single',
+    //     splitChunks: {
+    //         cacheGroups: {
+    //             vendor: {
+    //                 test: /[\\/]node_modules[\\/]/,
+    //                 name: 'vendors',
+    //                 chunks: 'all',
+    //             },
+    //         },
+    //     },
+    // },
     module: {
         rules: [
-            // {
-            //     test: /\.css$/,
-            //     use: [MiniCssExtractPlugin.loader, 'css-loader'],
-            // },
             {
                 test: /\.js$/,
                 loader: "babel-loader",
                 options:{
                     presets:[
                         ['babel-preset-env', {
-                        targets: {
-                            browsers: ['> 1%']
-                        },
-                        debug:false
-                    }]
+                            targets: {
+                                browsers: ['> 1%']
+                            },
+                            debug:false
+                        }]
                     ]
                 }
             },
             {
                 test: /\.css$/i,
                 use: ['style-loader', 'css-loader'],
-            },
-            // {
-            //     test: /\.(png|svg|jpg|jpeg|gif)$/i,
-            //     type: 'asset/resource',
-            //     generator: {
-            //         filename: '[name][ext]'
-            //     }
-            // },
-            {
-                test: /\.(jpg|png|gif|svg)$/i,  //i表示忽略图片格式大小写，例如.PNG
-                use: [{
-                    loader: 'url-loader',  // url-loader依赖于file-loader所以这两个包都需要下载
-                    options:{
-                        limit: 10*1024, //如果图片小于10k，就使用base64处理，
-                    }
-                }]
             },
             {//对字体图标的处理
                 test: /\.(ttf|woff2?)$/,
@@ -119,6 +103,22 @@ module.exports = {
                     dataUrlCondition: {
                         maxSize: 4 * 1024 // 4kb
                     }
+                }
+            },
+            // {
+            //     test: /\.(eot|svg|ttf|woff|woff2)$/,
+            //     use: {
+            //         loader: 'file-loader',
+            //         options: {
+            //             outputPath: 'fonts/'
+            //         }
+            //     }
+            // },
+            {
+                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                type: 'asset/resource',
+                generator: {
+                    filename: '[name][ext]'
                 }
             },
         ],
