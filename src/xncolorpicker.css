@@ -90,10 +90,11 @@
     height: 131px;
     /*padding: 8px;*/
     margin-top:6px;
+    margin-bottom:4px;
 }
 .fcolorpicker .color-palette .lightness{
     flex:0 0 200px;
-    height: 129px;
+    /*height: 129px;*/
     margin-right: 8px;
     /*border:1px solid #ccc;*/
     position: relative;
